@@ -5,7 +5,7 @@ function Carousel() {
       className="carousel slide"
       data-bs-ride="carousel"
     >
-      {/* Indicators */}
+
       <div className="carousel-indicators">
         <button
           type="button"
@@ -35,7 +35,7 @@ function Carousel() {
         ></button>
       </div>
 
-      {/* Slides */}
+      
       <div className="carousel-inner">
         <div className="carousel-item active">
           <img
@@ -74,7 +74,7 @@ function Carousel() {
         </div>
       </div>
 
-      {/* Controls */}
+      
       <button
         className="carousel-control-prev"
         type="button"

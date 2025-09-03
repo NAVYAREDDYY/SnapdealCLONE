@@ -7,9 +7,7 @@ function App() {
     
     <div>
       <Navbar />
-     
-
-     <HomePage/>
+      <HomePage/>
     </div>
   );
 }
