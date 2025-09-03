@@ -1,0 +1,25 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f6f7f8 !important; /* or your color */
+}
+.homepage-container {
+  display: flex;
+  gap: 20px; /* space between items */
+  padding: 20px;
+}
+.main-content {
+  display: flex;       /* make carousel + pincode card in a row */
+  gap: 20px;           /* space between carousel and pincode card */
+  flex: 1;
+  }
+
+
+.pincode-card {
+  width: 200px; /* smaller card on right */
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+

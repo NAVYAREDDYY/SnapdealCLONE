@@ -1,0 +1,71 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #e40046;
+    /* Snapdeal red */
+    color: white;
+}
+
+.navbar-left {
+    padding: 0px 30px;
+}
+
+.navbar-left img {
+  margin-right: 40px; /* space between logo and search */
+}
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.navbar-center {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    padding: 8px ;
+}
+
+.search-input {
+    width: 60%;
+    padding: 8px;
+    border: none;
+    border-radius: 2px;
+    font-size: 16px;
+}
+
+.search-btn {
+    padding: 8px 16px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.cart-btn {
+    display: flex;
+    align-items: center;
+    gap:6px;
+    margin-left: 12%;
+    padding: 8px 15px;
+    background-color: #e40046;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+}
+
+.Signin-btn {
+    display: flex;
+    align-items: center;
+    gap:6px;
+    padding: 8px 35px;
+    background-color: #e40046;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
