@@ -16,6 +16,14 @@ body {
   }
 
 
+.top-row {
+  display: flex; /* sidebar + main-content in one row */
+  gap: 20px;
+}
+
+
+
+
 .pincode-card {
   width: 200px; /* smaller card on right */
   border: 1px solid #ccc;
