@@ -19,7 +19,7 @@ const register = async(req,res)=>{
       }
 }
 
-const login = async()=>{
+const login = async(req,res)=>{
     const {email,password}=req.body
    try{
      const user =await User.findOne({email})
