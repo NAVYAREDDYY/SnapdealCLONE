@@ -2,7 +2,6 @@ const User = require("../models/user");
 const sendOtpEmail = require("../utils/email"); 
 const jwt = require("jsonwebtoken");
 
-
 const sendOtp = async (req, res) => {
   const { emailOrMobile } = req.body;
  console.log("Sending OTP to:", emailOrMobile);
@@ -11,8 +10,7 @@ const sendOtp = async (req, res) => {
     if (!emailOrMobile || !emailOrMobile.includes("@")) {
       return res.status(400).json({ message: "Valid Email is required" });
     }
-
-  
+    
     let user = await User.findOne({ email: emailOrMobile });
     if (!user) user = new User({ email: emailOrMobile });
 

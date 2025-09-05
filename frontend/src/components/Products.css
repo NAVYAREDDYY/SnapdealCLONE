@@ -35,3 +35,32 @@ button {
   border-radius: 4px;
   cursor: pointer;
 }
+.product-card a {
+  text-decoration: none; /* removes underline */
+  color: inherit;        /* keeps text color same as parent */
+  display: block;        /* ensures block layout for image + text */
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.product-card h6 {
+  margin: 5px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.product-card p {
+  color: #333;
+  font-weight: 500;
+}
+
+.product-card .original-price {
+  text-decoration: line-through;
+  color: #888;
+  margin-left: 5px;
+  font-size: 14px;
+}

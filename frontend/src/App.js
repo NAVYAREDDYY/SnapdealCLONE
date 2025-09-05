@@ -1,6 +1,7 @@
 import Navbar from './components/Navbar';
 import HomePage from './Pages/Homepage';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import ProductDetail from './components/ProductDetail';
 
 import "./App.css";
 
@@ -12,6 +13,7 @@ function App() {
       <Navbar />
        <Routes>
         <Route path="/" element={<HomePage/>} />
+        <Route path='/product/:id' element={<ProductDetail/>}/>
       </Routes>
       </BrowserRouter>
     </div>

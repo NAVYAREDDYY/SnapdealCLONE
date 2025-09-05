@@ -6,6 +6,7 @@ body {
 }
 .homepage-container {
   display: flex;
+  
   gap: 20px; /* space between items */
   padding: 20px;
 }
@@ -14,14 +15,6 @@ body {
   gap: 20px;           /* space between carousel and pincode card */
   flex: 1;
   }
-
-
-.top-row {
-  display: flex; /* sidebar + main-content in one row */
-  gap: 20px;
-}
-
-
 
 
 .pincode-card {

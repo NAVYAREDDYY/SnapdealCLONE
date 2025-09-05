@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Products.css"; 
+import { Link } from "react-router-dom";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -22,11 +23,14 @@ function Products() {
     <div className="products-container">
       {products.map((product) => (
         <div key={product._id} className="product-card">
+            <Link to={`/product/${product._id}`}>
           <img src={product.image} alt={product.name} />
-          <h3>{product.name}</h3>
+          <h6>{product.name}</h6>
           <p>₹{product.price}</p>
           {product.originalPrice && <span className="original-price">₹{product.originalPrice}</span>}
-          <button>Add to Cart</button>
+    
+          </Link>
+          
         </div>
       ))}
     </div>
