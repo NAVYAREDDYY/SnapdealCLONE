@@ -1,7 +1,8 @@
 const User = require("../models/user");
-const sendOtpEmail = require("../utils/email"); // import email.js
+const sendOtpEmail = require("../utils/email"); 
+const jwt = require("jsonwebtoken");
 
-// Send OTP (email only)
+
 const sendOtp = async (req, res) => {
   const { emailOrMobile } = req.body;
  console.log("Sending OTP to:", emailOrMobile);
@@ -11,19 +12,17 @@ const sendOtp = async (req, res) => {
       return res.status(400).json({ message: "Valid Email is required" });
     }
 
-    // find or create user
+  
     let user = await User.findOne({ email: emailOrMobile });
     if (!user) user = new User({ email: emailOrMobile });
 
-    // generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.otp = otp;
     user.otpExpiry = Date.now() + 5 * 60 * 1000;
     await user.save();
 
-    // send OTP using email.js
+    
     await sendOtpEmail(emailOrMobile, otp);
-
     console.log(`✅ OTP sent to ${emailOrMobile}: ${otp}`);
     res.status(200).json({ message: "OTP sent successfully" });
   } catch (err) {
@@ -31,7 +30,7 @@ const sendOtp = async (req, res) => {
     res.status(500).json({ message: "Error sending OTP", error: err.message });
   }
 };
-// Login with OTP
+
 const loginWithOtp = async (req, res) => {
   const { emailOrMobile, otp } = req.body;
 
@@ -46,12 +45,23 @@ const loginWithOtp = async (req, res) => {
     if (user.otp !== otp) return res.status(400).json({ message: "Invalid OTP" });
     if (user.otpExpiry < Date.now()) return res.status(400).json({ message: "OTP expired" });
 
-    // clear OTP after login
     user.otp = undefined;
     user.otpExpiry = undefined;
     await user.save();
 
-    res.status(200).json({ message: "Login successful" });
+    const token = jwt.sign(
+      { id: user._id, email: user.email }, 
+      process.env.JWTSECRET,               
+      { expiresIn: "1h" }                  
+    );
+   const username = user.email.split("@")[0]; 
+  res.status(200).json({ 
+  message: "Login successful", 
+  token,
+   user: { username }  
+});
+
+
   } catch (error) {
     res.status(500).json({ message: "Error during login", error: error.message });
   }

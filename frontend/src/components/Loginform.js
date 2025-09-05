@@ -6,24 +6,23 @@ function LoginForm() {
   const [otp, setOtp] = useState("");
   const [showOtp, setShowOtp] = useState(false);
 
-  // Step 1: Send OTP
   const handleSendOtp = async (e) => {
     e.preventDefault();
-      console.log("Sending data:", { emailOrMobile });
+    console.log("Sending data:", { emailOrMobile });
     try {
       const res = await axios.post("http://localhost:5000/otproutes/send-otp", {
         emailOrMobile
       });
 
       alert(res.data.message || "OTP sent successfully!");
-      setShowOtp(true); // show OTP input
+      setShowOtp(true); 
       console.log("showOtp:", true);
     } catch (err) {
       alert(err.response?.data?.message || "Failed to send OTP");
     }
   };
 
-  // Step 2: Verify OTP (Login)
+ 
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -32,11 +31,16 @@ function LoginForm() {
         emailOrMobile,
         otp,
       });
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("username", res.data.user.username);
 
+      }
       alert(res.data.message || "Login Successful!");
       setEmailOrMobile("");
       setOtp("");
       setShowOtp(false);
+      window.location.href = "/";
     } catch (err) {
       alert(err.response?.data?.message || "Login Failed");
     }
@@ -61,7 +65,7 @@ function LoginForm() {
         </div>
 
         {!showOtp ? (
-          <button  type="button" className="Continue-btn" onClick={handleSendOtp}>
+          <button type="button" className="Continue-btn" onClick={handleSendOtp}>
             CONTINUE
           </button>
         ) : (
@@ -76,7 +80,7 @@ function LoginForm() {
                 placeholder="Enter OTP"
               />
             </div>
-            <button  type="button" className="login-btn" onClick={handleLogin}>
+            <button type="button" className="login-btn" onClick={handleLogin}>
               Login
             </button>
           </>
