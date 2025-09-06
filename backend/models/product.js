@@ -6,7 +6,10 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   originalPrice: { type: Number }, // optional, for discount
   rating: { type: Number }, // optional
-  description: { type: String }  // optional
+  description: { type: String } , // optional
+  category: { type: String },     
+  stock: { type: Number }   
+
 });
 
 module.exports = mongoose.model("Product", productSchema);
