@@ -4,11 +4,12 @@ import { FaUser, FaShoppingCart, FaBox } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import LoginForm from "./Loginform";
 import RegisterForm from "./Register";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
 function Navbar() {
-
+    const cartCount = useSelector((state) => state.cart.items.length);
     const [showLogin, setShowLogin] = useState(false);
     const [showRegister, setShowRegister] = useState(false);
     const [username, setUsername] = useState(null);
@@ -28,7 +29,7 @@ function Navbar() {
 
     return (
         <nav className="navbar sticky-top">
-            <Link to='/' onClick={() => alert("Logo clicked!")}>
+            <Link to='/' >
                 <div className="navbar-left">
                     <img src={logo} alt="Snapdeal Logo" style={{ height: "30px" }} />
                 </div>
@@ -41,7 +42,8 @@ function Navbar() {
                     className="search-input"
                 />
                 <button className="search-btn"> Search</button>
-                <button className="cart-btn"><span>Cart</span><FaShoppingCart /></button>
+                <Link to="/cart"  className="cart-btn">
+                Cart {cartCount > 0 && <span>{cartCount}</span>}<FaShoppingCart /></Link>
                 <div className="dropdownWrapper">
                     <button className="sign-in"><span>{username ? username : "Sign In"}</span> <FaUser /></button>
 

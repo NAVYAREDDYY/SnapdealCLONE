@@ -1,11 +1,16 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux"; 
+import { addToCart } from "../redux/cartSlice"; 
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./ProductDetail.css"
 
 function ProductDetail() {
-  const { id } = useParams(); // get product id from URL
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const dispatch = useDispatch();
+  const Navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -20,6 +25,11 @@ function ProductDetail() {
   }, [id]);
 
   if (!product) return <p>Loading...</p>;
+    const handleAddToCart = () => {
+    dispatch(addToCart(product)); // send product to redux
+    Navigate('/cart')
+  };
+
 
   return (
 
@@ -32,7 +42,7 @@ function ProductDetail() {
       <p>Stock: {product.stock}</p>
 
       <div className="product-detail-buttons">
-        <button>Add to Cart</button>
+        <button onClick={handleAddToCart}>Add to Cart</button>
         <button>Buy Now</button>
       </div>
     </div>
