@@ -140,9 +140,9 @@ const seedProducts = async () => {
 
     for (let prod of products) {
       await Product.updateOne(
-        { name: prod.name }, // use a unique field like 'name' or 'sku'
-        { $set: prod },      // update all fields with new values
-        { upsert: true }     // insert if product doesn't exist
+        { name: prod.name }, 
+        { $set: prod },      
+        { upsert: true }  
       );
       console.log(`Product processed: ${prod.name}`);
     }

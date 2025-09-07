@@ -1,8 +1,8 @@
 const express = require("express");
+const { protect, adminOnly } = require("../middleware/authmiddleware")
 const Product = require('../models/product')
 
 const router = express.Router();
-
 
 router.get("/", async (req, res) => {
   try {
@@ -19,6 +19,23 @@ router.get("/:id", async (req, res) => {
     res.json(product);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+router.post("/add", protect, adminOnly, async (req, res) => {
+  try {
+    const { name, price, description, image, stock, category } = req.body;
+    if (!name || !price) {
+      return res.status(400).json({ message: "Name and Price are required" });
+    }
+    const product = new Product({ name,price,description,image,stock,category });
+    await product.save();
+
+    res.status(201).json({
+      message: "Product added successfully",
+      product
+    });
+  } catch (error) {
+    res.status(500).json({ message: " Error adding product", error: error.message });
   }
 });
 

@@ -17,6 +17,5 @@ app.use('/authroutes',authroutes)
 app.use('/otproutes',otproutes)
 app.use("/products", productRoutes);
 
-
 const PORT = process.env.PORT || 5001
 app.listen(PORT,()=> console.log(`server connected on http://localhost:${PORT}`))

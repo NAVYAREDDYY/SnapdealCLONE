@@ -8,7 +8,8 @@ const productSchema = new mongoose.Schema({
   rating: { type: Number }, // optional
   description: { type: String } , // optional
   category: { type: String },     
-  stock: { type: Number }   
+  stock: { type: Number },
+  isAdmin :{ type: Boolean, default: false },
 
 });
 

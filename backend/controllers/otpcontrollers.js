@@ -10,21 +10,19 @@ const sendOtp = async (req, res) => {
     if (!emailOrMobile || !emailOrMobile.includes("@")) {
       return res.status(400).json({ message: "Valid Email is required" });
     }
-    
     let user = await User.findOne({ email: emailOrMobile });
     if (!user) user = new User({ email: emailOrMobile });
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
     user.otp = otp;
     user.otpExpiry = Date.now() + 5 * 60 * 1000;
     await user.save();
 
-    
     await sendOtpEmail(emailOrMobile, otp);
-    console.log(`✅ OTP sent to ${emailOrMobile}: ${otp}`);
+    // console.log(`OTP sent to ${emailOrMobile}: ${otp}`);
     res.status(200).json({ message: "OTP sent successfully" });
   } catch (err) {
-    console.error("❌ Error in sendOtp:", err);
+    console.error("Error in sendOtp:", err);
     res.status(500).json({ message: "Error sending OTP", error: err.message });
   }
 };
@@ -53,12 +51,7 @@ const loginWithOtp = async (req, res) => {
       { expiresIn: "1h" }                  
     );
    const username = user.email.split("@")[0]; 
-  res.status(200).json({ 
-  message: "Login successful", 
-  token,
-   user: { username }  
-});
-
+   res.status(200).json({ message: "Login successful", token, user: { username }  });
 
   } catch (error) {
     res.status(500).json({ message: "Error during login", error: error.message });
