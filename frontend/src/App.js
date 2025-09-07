@@ -4,6 +4,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import ProductDetail from './components/ProductDetail';
 import CartPage from './Pages/CartPage';
 import CheckoutPage from "./Pages/CheckoutPage";
+import AdminDashboard from "./Pages/Adminpage";
 
 
 
@@ -20,6 +21,7 @@ function App() {
         <Route path='/product/:id' element={<ProductDetail/>}/>
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
       </BrowserRouter>
     </div>

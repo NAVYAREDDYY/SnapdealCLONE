@@ -7,7 +7,6 @@ import RegisterForm from "./Register";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-
 function Navbar() {
     const cartCount = useSelector((state) => state.cart.items.length);
     const [showLogin, setShowLogin] = useState(false);
