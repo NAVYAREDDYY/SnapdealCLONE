@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
   description: { type: String } , // optional
   category: { type: String },     
   stock: { type: Number },
-  isAdmin :{ type: Boolean, default: false },
+ 
 
 });
 

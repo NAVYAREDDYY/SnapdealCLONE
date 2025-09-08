@@ -46,7 +46,7 @@ const loginWithOtp = async (req, res) => {
     await user.save();
 
     const token = jwt.sign(
-      { id: user._id, email: user.email }, 
+      { id: user._id, email: user.email,isAdmin: user.isAdmin || false  }, 
       process.env.JWTSECRET,               
       { expiresIn: "1h" }                  
     );
