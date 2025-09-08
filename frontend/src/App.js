@@ -7,7 +7,6 @@ import CheckoutPage from "./Pages/CheckoutPage";
 import AdminDashboard from "./Pages/Adminpage";
 
 
-
 import "./App.css";
 
 function App() {

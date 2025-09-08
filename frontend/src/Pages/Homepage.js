@@ -1,6 +1,7 @@
 import Sidebar from "../components/Sidebar";
 import Carousel from "../components/Carousel";
 import Products from "../components/product";
+import Footer from "../components/footer"
 
 function HomePage() {
   return (
@@ -21,6 +22,7 @@ function HomePage() {
       </div>
 
       <div><Products /></div>
+      <Footer/>
     </>
 
   );

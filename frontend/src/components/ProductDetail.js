@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice"; 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./ProductDetail.css"
+import "./ProductDetail.css";
+import  Rating from "./Rating"
 
 function ProductDetail() {
   const { id } = useParams();
@@ -26,11 +27,9 @@ function ProductDetail() {
 
   if (!product) return <p>Loading...</p>;
     const handleAddToCart = () => {
-    dispatch(addToCart(product)); // send product to redux
+    dispatch(addToCart(product)); 
     Navigate('/cart')
   };
-
-
   return (
 
     <div className="product-detail">
@@ -40,13 +39,12 @@ function ProductDetail() {
       <p>Description: {product.description}</p>
       <p>Category: {product.category}</p>
       <p>Stock: {product.stock}</p>
-
+      <Rating  productId={product._id}/>
       <div className="product-detail-buttons">
         <button onClick={handleAddToCart}>Add to Cart</button>
         <button>Buy Now</button>
       </div>
     </div>
-
   );
 }
 

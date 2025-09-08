@@ -1,0 +1,51 @@
+.carousel-description {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+  background: #fff;
+  border: 1px solid #eee;
+  border-top: none; /* merges with carousel */
+}
+.carousel-description ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+}
+
+.carousel-description li {
+  margin: 0 15px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.carousel-description li.active {
+  border-bottom: 2px solid red;
+  font-weight: bold;
+}
+* Make carousel-inner relative so arrows can position inside it */
+#snapCarousel .carousel-inner {
+  position: relative;
+   height: 400px; 
+}
+
+
+#snapCarousel .carousel-control-prev,
+#snapCarousel .carousel-control-next {
+  position: absolute;       
+  top: 50%;                 
+  transform: translateY(-50%); 
+  width: 5%;               
+  height: auto;
+}
+
+#snapCarousel .carousel-control-prev-icon,
+#snapCarousel .carousel-control-next-icon {
+  background-size: 50px 50px; 
+}
+.carousel-img {
+  width: 100%;
+  height: 400px; /* set a fixed height */
+  object-fit: cover; /* ensures image scales nicely without stretching */
+}
