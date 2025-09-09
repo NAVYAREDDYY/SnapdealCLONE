@@ -3,15 +3,19 @@ import axios from "axios";
 
 function Rating({ productId }) {
   const [rating, setRating] = useState(0); 
+  const [submitted, setSubmitted] = useState(false);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:5000/products/${productId}/rate`, {
-        userId: "USER_ID_HERE", 
-        rating
-      });
+      const token = localStorage.getItem("token");
+      const response = await axios.post(`http://localhost:5000/products/${productId}/rate`, 
+        {rating },{ headers: { Authorization: `Bearer ${token}` } }
+      );
+      
       console.log("Updated Product:", response.data);
       alert("Rating submitted successfully!");
+      setSubmitted(true); 
     } catch (err) {
       console.error(err);
       alert("Error submitting rating");
@@ -31,7 +35,12 @@ function Rating({ productId }) {
         </span>
       ))}
       <p>You selected: {rating} stars</p>
-       <button onClick={handleSubmit}>Submit</button>
+       
+      {!submitted && (  
+        <button onClick={handleSubmit}>Submit</button>
+      )}
+
+      {submitted && <p>Thank you for your rating!</p>} 
     </div>
   );
 }

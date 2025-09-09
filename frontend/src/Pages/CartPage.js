@@ -12,7 +12,6 @@ function CartPage() {
     (total, item) => total + item.price * item.quantity,
     0
   );
-
   if (cartItems.length === 0) {
     return <h2 className="empty-cart">Your cart is empty</h2>;
   }
@@ -32,13 +31,11 @@ function CartPage() {
               <span>{item.quantity}</span>
               <button onClick={() => dispatch(increaseQty(item._id))}>+</button>
             </div>
-
-           
             <button
               className="remove-btn"
               onClick={() => dispatch(removeFromCart(item._id))}
             >
-              x Remove
+              Remove
             </button>
           </div>
         </div>

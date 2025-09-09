@@ -48,10 +48,15 @@ const loginWithOtp = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, email: user.email,isAdmin: user.isAdmin || false  }, 
       process.env.JWTSECRET,               
-      { expiresIn: "1h" }                  
+      { expiresIn: "7d" }                  
     );
    const username = user.email.split("@")[0]; 
-   res.status(200).json({ message: "Login successful", token, user: { username }  });
+   res.status(200).json({ message: "Login successful", token, user: {
+    _id: user._id,
+    username,
+    email: user.email,
+    isAdmin: user.isAdmin || false
+  }  });
 
   } catch (error) {
     res.status(500).json({ message: "Error during login", error: error.message });

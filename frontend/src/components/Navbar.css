@@ -5,6 +5,7 @@
     background-color: #e40046;
     color: white;
     height:80px;
+    width:100%
 }
 
 .navbar-left {
@@ -12,7 +13,8 @@
 }
 
 .navbar-left img {
-    margin-right: 40px;
+    margin-right: 54px;
+    margin-left:62px;
 
 }
 
@@ -57,8 +59,28 @@
     color: white;
     border: none;
     cursor: pointer;
-
+    position: relative;
 }
+
+.cart-btn .cart-count-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #fefdfd;
+  color: #4e4e4e;
+  border-radius: 50%;
+  font-size: 8px;
+  width: 17px;
+  height: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  z-index: 2;
+  border: 2px solid #e40046;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
 .sign-in {
     display: flex;
     align-items: center;  
@@ -69,7 +91,8 @@
     border-radius: 0;     
     cursor: pointer;
     height: 100%;          
-    padding: 8px 15px;       
+    padding: 8px 15px; 
+       
 }
 
 

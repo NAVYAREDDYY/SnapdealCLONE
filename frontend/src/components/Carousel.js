@@ -6,7 +6,7 @@ function Carousel() {
     const carousel = document.getElementById("snapCarousel");
 
     const handleSlide = (e) => {
-      const index = e.to; // gives the new active index
+      const index = e.to; 
       const items = document.querySelectorAll(".carousel-description li");
 
       items.forEach((item, i) => {

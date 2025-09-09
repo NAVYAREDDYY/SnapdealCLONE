@@ -3,9 +3,11 @@ const User = require("../models/user");
 
 const protect = async (req, res, next) => {
   try {
+    console.log("Authorization header received:", req.headers.authorization);
     const token = req.headers.authorization?.split(" ")[1]; 
     if (!token) return res.status(401).json({ message: "Not authorized, no token" });
     const decoded = jwt.verify(token, process.env.JWTSECRET);
+    console.log("Decoded token:", decoded);
     req.user = { _id: decoded.id, isAdmin: decoded.isAdmin };
     next();
   } catch (error) {

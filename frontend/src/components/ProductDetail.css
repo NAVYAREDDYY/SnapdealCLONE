@@ -1,62 +1,614 @@
-.product-detail {
+/* Breadcrumb subnavbar for product detail page */
+.product-breadcrumbs {
+  font-size: 15px;
+  color: #888;
+  margin-bottom: 18px;
+  margin-left: 8px;
+}
+.product-breadcrumbs a {
+  color: #222;
+  text-decoration: none;
+  font-weight: 500;
+  transition: border-bottom 0.15s;
+  border-bottom: 2px solid transparent;
+}
+.product-breadcrumbs a:hover {
+  color: #222;
+  border-bottom: 2px solid #222;
+  text-decoration: none;
+}
+/* Ensure sections are visible below sticky tab menu */
+.snapdeal-highlights,
+.snapdeal-reviews,
+.snapdeal-question {
+  scroll-margin-top: 70px; /* Adjust if your sticky menu is taller/shorter */
+}
+/* Snapdeal tabbed menu for below info sections */
+.snapdeal-below-tabs {
+  margin: 40px 0 0 0;
+  padding: 32px 0 0 0;
+  border-top: 1px solid #eee;
+}
+.snapdeal-below-tab-menu {
   display: flex;
-  flex-direction: column;  /* stack image + details + buttons vertically */
-  align-items: center;     /* center horizontally */
-  text-align: center;
-  min-height: 80vh;
-  padding: 20px;
-  max-width: 600px;        /* card width */
-  margin: 40px auto;       /* center card in page */
-  background-color: #f9f9f9;
-  border-radius: 2px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  gap: 0;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 0;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
+}
+.snapdeal-below-tab-menu button {
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 1.1rem;
+  color: #888;
+  padding: 16px 36px 12px 36px;
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  font-weight: 600;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+.snapdeal-below-tab-menu button.active {
+  color: #e40046;
+  border-bottom: 2.5px solid #e40046;
+  background: #fafbfc;
+}
+.snapdeal-below-tab-content {
+  background: #e3e4e4;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 32px 24px 24px 24px;
+  min-height: 120px;
+}
+/* Color section below info */
+.snapdeal-color-row-below {
+  margin: 32px 0 0 0;
+  padding: 24px 0 0 0;
+  border-top: 1px solid #eee;
 }
 
-.product-detail img {
-  width: 300px;
-  border-radius: 10px;
-  margin-bottom: 20px;
+/* Below section: highlights, reviews, question */
+.snapdeal-below-section {
+  display: flex;
+  gap: 48px;
+  margin: 40px 0 0 0;
+  padding: 32px 0 0 0;
+  border-top: 1px solid #eee;
 }
-
-.product-detail h2 {
-  margin-bottom: 10px;
-  font-size: 26px;
-  color: #333;
+.snapdeal-highlights, .snapdeal-reviews, .snapdeal-question {
+  flex: 1;
+  background: #fafbfc;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 24px 18px 18px 18px;
+  min-width: 220px;
 }
-
-.product-detail p {
-  margin: 5px 0;
-  color: #555;
-  font-size: 16px;
+.snapdeal-highlights h3, .snapdeal-reviews h3, .snapdeal-question h3 {
+  font-size: 1.15rem;
+  color: #e40046;
+  margin-bottom: 12px;
+  font-weight: 600;
 }
-
-.product-detail-buttons {
-  display: flex;       /* buttons in a row */
+.snapdeal-highlights ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #444;
+  font-size: 15px;
+}
+.snapdeal-highlights li {
+  margin-bottom: 4px;
+}
+.snapdeal-reviews {
+  text-align: left;
+}
+.snapdeal-reviews-left {
+  text-align: left;
+}
+.snapdeal-reviews p {
+  color: #888;
+  font-size: 15px;
+  margin-top: 10px;
+}
+.snapdeal-question p {
+  color: #1e90ff;
+  font-size: 15px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+/* Snapdeal: small image left of main image */
+.snapdeal-img-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.snapdeal-small-img-wrap {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 15px;           /* space between buttons */
-  margin-top: 20px;
+  width: 70px;
+  height: 70px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  border: 1.5px solid #eee;
 }
-
-.product-detail-buttons button {
-  padding: 10px 20px;
+.snapdeal-small-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+/* Snapdeal accurate two-column layout */
+.snapdeal-detail {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 32px 24px 24px 24px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+.snapdeal-main-row {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+}
+.snapdeal-gallery-col {
+  min-width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+.snapdeal-main-img-wrap {
+  background: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 16px;
+  margin-bottom: 8px;
+}
+.snapdeal-main-img {
+  width: 320px;
+  height: 320px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fafafa;
+}
+.snapdeal-color-row {
+  width: 100%;
+  margin-top: 8px;
+}
+.snapdeal-color-label {
+  font-size: 15px;
+  color: #444;
+  margin-right: 12px;
+  font-weight: 500;
+}
+.snapdeal-color-list {
+  display: flex;
+  gap: 18px;
+  margin-top: 10px;
+}
+.snapdeal-color-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  padding: 6px 10px 4px 10px;
+  cursor: pointer;
+  transition: border 0.2s;
+  background: #fafafa;
+}
+.snapdeal-color-item.selected {
+  border: 2px solid #1e90ff;
+  background: #eaf4ff;
+}
+.snapdeal-color-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.snapdeal-color-item span {
+  font-size: 13px;
+  color: #444;
+}
+.snapdeal-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.snapdeal-title {
+  font-size: 2rem;
+  color: #222;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.snapdeal-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 15px;
+  color: #666;
+}
+.snapdeal-link {
+  color: #1e90ff;
+  cursor: pointer;
+  font-size: 15px;
+  margin-left: 8px;
+}
+.snapdeal-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin: 10px 0 8px 0;
+}
+.snapdeal-mrp {
+  color: #888;
+  font-size: 1.1rem;
+}
+.snapdeal-mrp-strike {
+  text-decoration: line-through;
+  color: #888;
+  margin-left: 2px;
+}
+.snapdeal-tax {
+  color: #888;
+  font-size: 0.95rem;
+  margin-left: 12px;
+}
+.snapdeal-offer-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.snapdeal-price {
+  font-size: 2rem;
+  color: #e40046;
+  font-weight: 700;
+}
+.snapdeal-discount {
+  color: #fff;
+  background: #e40046;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 4px;
+  padding: 2px 10px;
+}
+.snapdeal-actions {
+  display: flex;
+  gap: 24px;
+  margin-top: 18px;
+}
+.snapdeal-cart-btn, .snapdeal-buy-btn {
+  padding: 16px 38px;
+  font-size: 1.1rem;
   border: none;
   border-radius: 2px;
-  cursor: pointer;
   font-weight: 600;
-  font-size: 16px;
-  transition: background-color 0.2s;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.snapdeal-cart-btn {
+  background: #222;
+  color: #fff;
+}
+.snapdeal-cart-btn:hover {
+  background: #444;
+}
+.snapdeal-buy-btn {
+  background: #e40046;
+  color: #fff;
+}
+.snapdeal-buy-btn:hover {
+  background: #b80036;
+}
+/* Vertical thumbnail gallery on the left */
+.pd-thumbs-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  margin-right: 18px;
+}
+.pd-thumbs-vertical img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #eee;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: border 0.2s, opacity 0.2s;
+}
+.pd-thumbs-vertical img.active,
+.pd-thumbs-vertical img:hover {
+  border: 2px solid #e40046;
+  opacity: 1;
+}
+/* Gallery row: small image left of main image */
+.pd-gallery-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+}
+.pd-float-img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  background: #fff;
+  border: 1.5px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pd-float-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.pd-main-img img {
+  width: 320px;
+  height: 320px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fafafa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+/* Gallery horizontal layout: small image and thumbs on left, main image on right */
+.pd-gallery-horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 18px;
+}
+.pd-side-imgs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.pd-float-img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  background: #fff;
+  border: 1.5px solid #eee;
+  margin-bottom: 4px;
 }
 
-.product-detail-buttons button:first-child {
-  background-color: #cd3741;
-  color: white;
+/* Color options Snapdeal style */
+.pd-colors {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 8px 0;
+}
+.pd-color-label {
+  font-size: 15px;
+  color: #444;
+  margin-right: 6px;
+}
+.pd-color-dot {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  margin-right: 4px;
+  border: 2px solid #eee;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: border 0.2s;
+}
+.pd-color-dot:hover {
+  border: 2px solid #e40046;
 }
 
+/* Snapdeal-like Product Detail Modern Layout */
+.product-detail.snapdeal-layout {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 32px 24px 24px 24px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
 
+.pd-main {
+  display: flex;
+  gap: 40px;
+}
 
-.product-detail-buttons button:last-child {
-  background-color:  #cd3741;
-  color: white;
+/* Gallery */
+.pd-gallery {
+  min-width: 340px;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pd-thumbs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.pd-thumbs img {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  border: 2px solid #eee;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: border 0.2s, opacity 0.2s;
+}
+.pd-thumbs img.active,
+.pd-thumbs img:hover {
+  border: 2px solid #e40046;
+  opacity: 1;
+}
+.pd-main-img img {
+  width: 320px;
+  height: 320px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fafafa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* Info */
+.pd-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pd-info h2 {
+  font-size: 2rem;
+  color: #222;
+  margin-bottom: 6px;
+}
+.pd-brand-rating {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 15px;
+  color: #666;
+}
+.pd-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin: 10px 0 8px 0;
+}
+.pd-price {
+  font-size: 2rem;
+  color: #e40046;
+  font-weight: 700;
+}
+.pd-original {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 1.1rem;
+}
+.pd-offer {
+  color: #008000;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-left: 8px;
+}
+.pd-features {
+  margin: 0 0 8px 0;
+  padding-left: 18px;
+  color: #444;
+  font-size: 15px;
+}
+.pd-features li {
+  margin-bottom: 2px;
+}
+.pd-delivery {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+.pd-pincode {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  font-size: 15px;
+  width: 120px;
+}
+.pd-check-btn {
+  background: #e40046;
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  padding: 7px 18px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.pd-actions {
+  display: flex;
+  gap: 18px;
+  margin: 18px 0 8px 0;
+}
+.pd-cart-btn, .pd-buy-btn {
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 2px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pd-cart-btn {
+  background: #fff;
+  color: #e40046;
+  border: 2px solid #e40046;
+}
+.pd-cart-btn:hover {
+  background: #fbeaec;
+}
+.pd-buy-btn {
+  background: #e40046;
+  color: #fff;
+}
+.pd-buy-btn:hover {
+  background: #b80036;
+}
+.pd-seller {
+  font-size: 15px;
+  color: #444;
+  margin-top: 8px;
+}
+
+/* Tabs */
+.pd-tabs {
+  margin-top: 36px;
+  background: #fafafa;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 18px 24px 12px 24px;
+}
+.pd-tab-headers {
+  display: flex;
+  gap: 32px;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 18px;
+}
+.pd-tab-headers span {
+  font-size: 1.1rem;
+  color: #888;
+  padding-bottom: 8px;
+  cursor: pointer;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+.pd-tab-headers span.active {
+  color: #e40046;
+  border-bottom: 2.5px solid #e40046;
+  font-weight: 600;
+}
+.pd-tab-content {
+  font-size: 1rem;
+  color: #333;
+  min-height: 60px;
 }
 
 

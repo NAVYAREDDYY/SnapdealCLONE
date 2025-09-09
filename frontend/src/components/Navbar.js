@@ -41,8 +41,11 @@ function Navbar() {
                     className="search-input"
                 />
                 <button className="search-btn"> Search</button>
-                <Link to="/cart"  className="cart-btn">
-                Cart {cartCount > 0 && <span>{cartCount}</span>}<FaShoppingCart /></Link>
+                <Link to="/cart" className="cart-btn">
+                  Cart
+                  <FaShoppingCart />
+                  {cartCount > 0 && <span className="cart-count-badge">{cartCount}</span>}
+                </Link>
                 <div className="dropdownWrapper">
                     <button className="sign-in"><span>{username ? username : "Sign In"}</span> <FaUser /></button>
 

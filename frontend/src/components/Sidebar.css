@@ -1,11 +1,70 @@
+.sidebar-category-item {
+  position: relative;
+}
+.sidebar-flyout {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  min-width: 180px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 4px;
+  padding: 12px 0;
+  z-index: 100;
+  margin-left: 4px;
+}
+.sidebar-sublist {
+  list-style: none ;
+  padding: 0 18px;
+  margin: 0;
+}
+.sidebar-sublist li {
+  font-size: 14px;
+  color: #444;
+  padding: 6px 0;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.sidebar-sublist li:hover {
+  background: #f5f5f5;
+  color: #e40046;
+}
+.sidebar-list > li > span.active {
+  color: #e40046;
+}
+.sidebar-sublist {
+  transition: max-height 0.2s ease;
+  overflow: hidden;
+}
+/* Subcategory styling for Snapdeal-style sidebar */
+.sidebar-sublist {
+  list-style: none;
+  padding-left: 18px;
+  margin: 4px 0 8px 0;
+}
+.sidebar-sublist li {
+  font-size: 13px;
+  color: #414141;
+  padding: 2px 0 2px 8px;
+  border-left: 2px solid #ffffff;
+  margin-bottom: 2px;
+}
+.sidebar-list > li > span {
+  font-weight: 400;
+  color: #2c2d2c;
+  cursor: pointer;
+  display: block;
+  margin-bottom: 2px;
+}
 .sidebar {
-  width: 180px;           /* narrower width */
-  background-color: #fffdfd;
-  height: 100vh;
+  width: 200px;           /* unified width */
+  background-color: #fff;
   border-radius: 2px;
-  margin-left: 30px;
-  padding :8px;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  padding: 10px;            /* removed extra padding */
+  height: auto;
+   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .sidebar-list {
@@ -17,7 +76,7 @@
 .sidebar-list li {
   display: flex;
   align-items: center;
-  padding: 6px 0;          /* smaller vertical padding */
+  padding: 6px 0;          /* maintain vertical padding */
   cursor: pointer;
   color: #3e3c3c;
   font-size: 14px;         /* smaller font */

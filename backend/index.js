@@ -12,7 +12,10 @@ dotenv.config()
 connectDB()
 
 app.use(express.json())
-app.use(cors());
+app.use(cors({
+origin: "http://localhost:3000", // your frontend
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"]}));
 app.use('/authroutes',authroutes)
 app.use('/otproutes',otproutes)
 app.use("/products", productRoutes);

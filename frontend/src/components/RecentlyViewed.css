@@ -1,0 +1,44 @@
+/* Recently Viewed Section Styles */
+.recently-viewed-section {
+  margin: 32px 0 0 0;
+  padding: 16px 0 8px 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.recently-viewed-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #222;
+  margin: 0 0 18px 24px;
+}
+.recently-viewed-list {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 0 24px 12px 24px;
+}
+.recently-viewed-card {
+  min-width: 120px;
+  max-width: 140px;
+  background: #fafbfc;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 8px 8px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.recently-viewed-card img {
+  width: 100%;
+  height: 90px;
+  object-fit: contain;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.recently-viewed-name {
+  font-size: 14px;
+  color: #444;
+  text-align: center;
+  margin-top: 2px;
+}
