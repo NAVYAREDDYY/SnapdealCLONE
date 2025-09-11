@@ -57,7 +57,7 @@ function Sidebar() {
     }
   };
 
-  // --- DELAYED FLYOUT LOGIC ---
+ 
   const handleMouseEnter = (idx) => {
     clearTimeout(flyoutTimeout.current);
     setHoverIndex(idx);

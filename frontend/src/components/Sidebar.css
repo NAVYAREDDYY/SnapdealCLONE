@@ -64,7 +64,8 @@
   border-radius: 2px;
   padding: 10px;            /* removed extra padding */
   height: auto;
-   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+ 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
 }
 
 .sidebar-list {

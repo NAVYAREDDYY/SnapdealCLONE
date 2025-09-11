@@ -50,7 +50,7 @@ function Carousel() {
         </div>
       </div>
 
-      {/* Arrows */}
+     
       <button className="carousel-control-prev" type="button" data-bs-target="#snapCarousel" data-bs-slide="prev">
         <span className="carousel-control-prev-icon"></span>
       </button>
@@ -58,11 +58,11 @@ function Carousel() {
         <span className="carousel-control-next-icon"></span>
       </button>
 
-      {/* Custom Row Indicators */}
+      
       <div className="carousel-description">
         <ul>
           <li data-bs-target="#snapCarousel" data-bs-slide-to="0" className="active">BOB CARD</li>
-          <li data-bs-target="#snapCarousel" data-bs-slide-to="1">India @100</li>
+          <li data-bs-target="#snapCarousel" data-bs-slide-to="1">India @100:Envisioning to...</li>
           <li data-bs-target="#snapCarousel" data-bs-slide-to="2">Sports Footwear</li>
           <li data-bs-target="#snapCarousel" data-bs-slide-to="3">Ethnic Wear</li>
           <li data-bs-target="#snapCarousel" data-bs-slide-to="4">Kitchenware</li>
