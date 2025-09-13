@@ -5,6 +5,7 @@ const connectDB = require('./db/config')
 const authroutes = require('./routes/authroutes')
 const otproutes = require('./routes/otproutes')
 const productRoutes = require('./routes/productRoutes')
+const payment = require('./routes/payment')
 
 
 const app = express()
@@ -19,6 +20,7 @@ origin: "http://localhost:3000", // your frontend
 app.use('/authroutes',authroutes)
 app.use('/otproutes',otproutes)
 app.use("/products", productRoutes);
+app.use("/payment", payment);
 
 const PORT = process.env.PORT || 5001
 app.listen(PORT,()=> console.log(`server connected on http://localhost:${PORT}`))

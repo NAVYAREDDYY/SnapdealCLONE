@@ -1,28 +1,62 @@
 /* Trending Products Section - Snapdeal Style */
 .trending-section {
-  margin: 24px 70px 24px 87px;
+  margin: 24px 50px 0 0;
+  padding: 0;
   background: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   overflow: hidden;
-  
+  position: relative;
+  width: auto;
+  max-width: calc(100vw - 400px);
 }
 
-.trending-header {
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 50%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid #eee;
-  background: #fafafa;
- 
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.2s;
+}
+
+.nav-arrow:hover {
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-arrow.prev {
+  left: 10px;
+}
+
+.nav-arrow.next {
+  right: 10px;
+}
+
+.nav-arrow svg {
+  width: 20px;
+  height: 20px;
+  fill: #666;
 }
 
 .trending-title {
   font-size: 18px;
   font-weight: 400;
   color: #333;
+  padding: 14px 16px;
   margin: 0;
+  background-color: #f4f5f7;
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
 .view-all-link {
@@ -36,39 +70,57 @@
   text-decoration: underline;
 }
 
-.trending-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1px;
-  background: #eee;
+.trending-list {
+  display: flex;
+  gap: 0;
+  background: #fff;
   padding: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;
+}
+
+.trending-list::-webkit-scrollbar {
+  display: none;
 }
 
 .trending-card {
+  flex: 0 0 220px;
+  min-width: 220px;
   background: #fff;
-  padding: 12px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  margin: 0;
+  scroll-snap-align: start;
+  border-right: 1px solid #f0f0f0;
 }
 
 .trending-card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .trending-img-wrap {
-  position: relative;
-  padding-bottom: 100%;
-  margin-bottom: 8px;
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
 }
 
 .trending-img-wrap img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
 }
 

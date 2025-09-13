@@ -1,52 +1,70 @@
-import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart, increaseQty, decreaseQty } from "../redux/cartSlice";
+import { useSelector } from "react-redux";
 import "./CartPage.css";
 import { useNavigate } from "react-router-dom";
 
 function CartPage() {
   const cartItems = useSelector((state) => state.cart.items);
-  const dispatch = useDispatch();
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
-  if (cartItems.length === 0) {
-    return <h2 className="empty-cart">Your cart is empty</h2>;
-  }
 
   return (
-    <div className="cart-container">
-      <h2 className="cart-title">Shopping Cart</h2>
-
-      {cartItems.map((item) => (
-        <div className="cart-item" key={item._id}>
-          <img src={item.image} alt={item.name} className="cart-item-img" />
-          <div className="cart-item-details">
-            <h3 className="cart-item-name">{item.name}</h3>
-            <p className="cart-item-price">₹{item.price}</p>   
-            <div className="cart-quantity">
-              <button onClick={() => dispatch(decreaseQty(item._id))}>-</button>
-              <span>{item.quantity}</span>
-              <button onClick={() => dispatch(increaseQty(item._id))}>+</button>
-            </div>
-            <button
-              className="remove-btn"
-              onClick={() => dispatch(removeFromCart(item._id))}
-            >
-              Remove
-            </button>
+    <>
+    <div className="cart-header-section">
+      {cartItems.length > 0 && (
+        <div className="success-notification">
+          <div className="notification-content">
+            <span className="notification-text">
+            <span className="checkmark">✓</span>
+              {cartItems[cartItems.length - 1].name} added to your cart
+            </span>
+            <button className="close-notification">×</button>
           </div>
         </div>
-      ))}
+      )}
+      <div className="mini-cart-header">
+        <div className="mini-cart-content">
+          <div className="cart-products">
+          {cartItems.length > 0 && (
+            <div className="cart-product-preview">
+              <img 
+                src={cartItems[cartItems.length - 1].image} 
+                alt={cartItems[cartItems.length - 1].name} 
+                className="product-thumbnail" 
+              />
+              <div className="product-price">
+                Rs. {cartItems[cartItems.length - 1].price}
+              </div>
+            </div>
+          )}
+          </div>
+        
+        <div className="mini-cart-info">
+          <div className="cart-count">Your Order ({cartItems.length} Items)</div>
+          <div className="cart-total">
+            <span className="total-label">You Pay: </span>
+            <span className="total-amount">Rs. {totalPrice}</span>
+          </div>
+          <div className="cart-note">
+            (Including delivery and other charges. View Cart for details)
+          </div>
+        </div>
 
-     
-      <div className="cart-summary">
-        <h3>Subtotal: ₹{totalPrice}</h3>
-        <button className="checkout-btn"onClick={() => Navigate("/checkout")}>Proceed to Checkout</button>
+        <div className="mini-cart-actions">
+          <button className="proceed-btn" onClick={() => navigate("/checkout")}>
+            PROCEED TO CHECKOUT
+          </button>
+          <button className="view-cart-btn" onClick={() => navigate("/view-cart")}>
+            VIEW CART
+          </button>
+        </div>
       </div>
     </div>
+    </div>
+    </>
   );
 }
 
