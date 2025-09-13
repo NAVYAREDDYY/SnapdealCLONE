@@ -1,10 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice";
 
 function LoginForm() {
   const [emailOrMobile, setEmailOrMobile] = useState("");
   const [otp, setOtp] = useState("");
   const [showOtp, setShowOtp] = useState(false);
+  const dispatch = useDispatch();
+
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
@@ -31,12 +35,14 @@ function LoginForm() {
         emailOrMobile,
         otp,
       });
-      if (res.data.token) {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user)); 
-        localStorage.setItem("username", res.data.user.username);
-
+       
+      if (res.data.token && res.data.user) {
+        // Save in Redux
+        dispatch(setUser({ ...res.data.user, token: res.data.token }));
+        // Save in localStorage for persistence
+        localStorage.setItem("currentUser", JSON.stringify({ ...res.data.user, token: res.data.token }));
       }
+     
       alert(res.data.message || "Login Successful!");
       setEmailOrMobile("");
       setOtp("");

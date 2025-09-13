@@ -10,6 +10,7 @@ function AdminDashboard() {
     image: "",
     stock: "",
     category: "",
+    subCategory: "",
   });
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -40,17 +41,17 @@ function AdminDashboard() {
         showNotification('Stock cannot be negative', 'error');
         return;
       }
-      
-      const token = localStorage.getItem("token"); 
+
+      const token = localStorage.getItem("token");
       const res = await axios.post(
         "http://localhost:5000/products/add",
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
         }
-        
+
       );
       console.log(res.data);
       showNotification('Product added successfully!');
@@ -61,8 +62,9 @@ function AdminDashboard() {
         image: "",
         stock: "",
         category: "",
+        subCategory: "",
       });
-      fetchProducts(); 
+      fetchProducts();
     } catch (err) {
       showNotification(err.response?.data?.message || err.message, 'error');
     }
@@ -132,7 +134,7 @@ function AdminDashboard() {
     }
   };
 
-  
+
   const fetchProducts = async () => {
     try {
       const res = await axios.get("http://localhost:5000/products");
@@ -206,6 +208,17 @@ function AdminDashboard() {
               />
             </div>
             <div className="input-group">
+              <label htmlFor="subCategory">Sub Category</label>
+              <input
+                id="subCategory"
+                type="text"
+                name="subCategory"
+                value={formData.subCategory}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="input-group">
               <label htmlFor="image">Image URL</label>
               <input
                 id="image"
@@ -252,13 +265,13 @@ function AdminDashboard() {
                 <p><strong>Description:</strong> {product.description}</p>
               </div>
               <div className="product-actions">
-                <button 
+                <button
                   className="action-button edit-button"
                   onClick={() => handleEdit(product)}
                 >
                   Edit
                 </button>
-                <button 
+                <button
                   className="action-button delete-button"
                   onClick={() => handleDeleteClick(product)}
                 >
@@ -276,13 +289,13 @@ function AdminDashboard() {
             <h2>Confirm Delete</h2>
             <p>Are you sure you want to delete the product "{productToDelete.name}"?</p>
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-              <button 
+              <button
                 className="action-button delete-button"
                 onClick={handleDeleteConfirm}
               >
                 Yes, Delete
               </button>
-              <button 
+              <button
                 className="action-button"
                 onClick={() => {
                   setShowDeleteModal(false);

@@ -35,8 +35,16 @@ const loginWithOtp = async (req, res) => {
       return res.status(400).json({ message: "Email/Mobile and OTP required" });
     }
 
-    const user = await User.findOne({ email: emailOrMobile });
-    if (!user) return res.status(400).json({ message: "User not found" });
+  let user = await User.findOne({ email: emailOrMobile });
+      if (!user) {
+      // Create new user if not exists
+      user = await User.create({
+        email: emailOrMobile,
+        otp,               // store OTP temporarily for verification
+        otpExpiry: Date.now() + 5 * 60 * 1000, // 5 mins
+        name: emailOrMobile.split("@")[0],
+      });
+    }
 
     if (user.otp !== otp) return res.status(400).json({ message: "Invalid OTP" });
     if (user.otpExpiry < Date.now()) return res.status(400).json({ message: "OTP expired" });

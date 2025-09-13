@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, increaseQty, decreaseQty } from "../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
@@ -14,36 +13,39 @@ function ViewCart() {
     0
   );
 
-  const deliveryCharge = totalPrice > 500 ? 0 : 40;
   const mrpTotal = cartItems.reduce(
     (total, item) => total + (item.price * 1.2) * item.quantity,
     0
   );
+
   const totalSavings = mrpTotal - totalPrice;
+  const deliveryCharge = totalPrice > 500 ? 0 : 40;
 
   if (cartItems.length === 0) {
     return (
       <div className="empty-cart-container">
-        <img src="/path-to-empty-cart-image.png" alt="Empty Cart" className="empty-cart-image" />
+        <img src="/empty-cart.png" alt="Empty Cart" className="empty-cart-image" />
         <h2 className="empty-cart">Your Shopping Cart is empty</h2>
         <p className="empty-cart-message">Add items to it now.</p>
-        <button className="shop-now-btn" onClick={() => navigate('/')}>Shop Now</button>
+        <button className="shop-now-btn" onClick={() => navigate("/")}>Shop Now</button>
       </div>
     );
   }
 
   return (
     <div className="view-cart-page">
+      <div className="cart-header-section">
+        <div className="cart-header">
+          <h2 className="cart-title">Shopping Cart ({cartItems.length} Items)</h2>
+          <div className="pincode-checker">
+            <input type="text" placeholder="Enter pincode" className="pincode-input" />
+            <button className="check-btn">Check</button>
+          </div>
+        </div>
+      </div>
+
       <div className="view-cart-container">
         <div className="cart-left-section">
-          <div className="cart-header">
-            <h2 className="cart-title">Shopping Cart ({cartItems.length} Items)</h2>
-            <div className="pincode-checker">
-              <input type="text" placeholder="Enter pincode" className="pincode-input" />
-              <button className="check-btn">Check</button>
-            </div>
-          </div>
-
           <div className="cart-items">
             {cartItems.map((item) => (
               <div className="cart-item" key={item._id}>
@@ -54,21 +56,19 @@ function ViewCart() {
                   <h3 className="cart-item-name">{item.name}</h3>
                   <div className="price-section">
                     <span className="current-price">Rs. {item.price}</span>
-                    <span className="mrp-price">MRP: Rs. {Math.round(item.price * 1.2)}</span>
+                    <span className="mrp-price">MRP Rs. {Math.round(item.price * 1.2)}</span>
                     <span className="discount">20% Off</span>
                   </div>
                   <div className="delivery-info">
-                    <span className="delivery-date">
-                      Delivery by {new Date(Date.now() + 4*24*60*60*1000).toLocaleDateString()}
-                    </span>
+                    Delivery expected by {new Date(Date.now() + 4*24*60*60*1000).toLocaleDateString()}
                   </div>
                   <div className="cart-item-actions">
                     <div className="cart-quantity">
-                      <button onClick={() => dispatch(decreaseQty(item._id))}>-</button>
+                      <button onClick={() => dispatch(decreaseQty(item._id))}>−</button>
                       <span>{item.quantity}</span>
                       <button onClick={() => dispatch(increaseQty(item._id))}>+</button>
                     </div>
-                    <button
+                    <button 
                       className="remove-btn"
                       onClick={() => dispatch(removeFromCart(item._id))}
                     >
@@ -85,7 +85,7 @@ function ViewCart() {
           <div className="price-details">
             <h3 className="price-summary-title">Price Details</h3>
             <div className="price-summary-item">
-              <span>Total MRP</span>
+              <span>Price ({cartItems.length} Items)</span>
               <span>Rs. {Math.round(mrpTotal)}</span>
             </div>
             <div className="price-summary-item">
@@ -106,8 +106,11 @@ function ViewCart() {
               You will save Rs. {Math.round(totalSavings)} on this order
             </div>
           </div>
-          <button className="checkout-btn" onClick={() => navigate("/checkout")}>
-            PROCEED TO PAYMENT
+          <button 
+            className="checkout-btn" 
+            onClick={() => navigate("/checkout")}
+          >
+            PROCEED TO PAY
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 /* Trending Products Section - Snapdeal Style */
 .trending-section {
-  margin: 24px 50px 0 0;
+  margin-left:90px;
+  margin-bottom:30px;
   padding: 0;
   background: #fff;
   border-radius: 2px;
@@ -8,7 +9,7 @@
   overflow: hidden;
   position: relative;
   width: auto;
-  max-width: calc(100vw - 400px);
+  max-width: calc(100vw - 180px);
 }
 
 .nav-arrow {
@@ -125,34 +126,70 @@
 }
 
 .trending-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  text-align: left;
 }
 
 .trending-name {
-  font-size: 13px;
-  color: #666;
-  margin: 0;
-  line-height: 1.3;
-  height: 34px;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  white-space: normal;
   overflow: hidden;
+  text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
 .trending-price {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-top: 2px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
-.trending-price .price {
-  font-size: 15px;
+.price {
+  font-size: 16px;
   font-weight: 600;
   color: #333;
+}
+
+.mrp {
+  font-size: 14px;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.trending-discount {
+  font-size: 13px;
+  color: #26a541;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .trending-section {
+    margin-right: 20px;
+    max-width: calc(100vw - 40px);
+  }
+}
+
+@media (max-width: 768px) {
+  .trending-card {
+    flex: 0 0 180px;
+    min-width: 180px;
+  }
+
+  .trending-img-wrap {
+    height: 150px;
+  }
+
+  .nav-arrow {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .trending-price .mrp {

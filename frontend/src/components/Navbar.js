@@ -52,7 +52,12 @@ function Navbar() {
                     <div className="dropdownAccount">
                         <ul className="accountList">
                             <li><FaUser /><span>Your Account</span></li>
-                            <li><FaBox /><span>Your Orders</span></li>
+                                                        <li>
+                                                            <Link to="/orders" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
+                                                                <FaBox style={{ marginRight: 4 }} />
+                                                                <span>Your Orders</span>
+                                                            </Link>
+                                                        </li>
                             <hr />
 
                             {!username ? (
