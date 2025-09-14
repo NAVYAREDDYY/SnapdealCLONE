@@ -2,12 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/userSlice";
-
-function LoginForm() {
+import { useNavigate } from "react-router-dom";
+function LoginForm({ setUsername }) {
   const [emailOrMobile, setEmailOrMobile] = useState("");
   const [otp, setOtp] = useState("");
   const [showOtp, setShowOtp] = useState(false);
   const dispatch = useDispatch();
+  const navigate=useNavigate();
 
 
   const handleSendOtp = async (e) => {
@@ -36,18 +37,25 @@ function LoginForm() {
         otp,
       });
        
-      if (res.data.token && res.data.user) {
-        // Save in Redux
+       if (res.data.token && res.data.user) {
         dispatch(setUser({ ...res.data.user, token: res.data.token }));
-        // Save in localStorage for persistence
-        localStorage.setItem("currentUser", JSON.stringify({ ...res.data.user, token: res.data.token }));
+
+        // ✅ Save both full user & username separately
+        localStorage.setItem(
+          "currentUser",
+          JSON.stringify({ ...res.data.user, token: res.data.token })
+        );
+        localStorage.setItem("username", res.data.user.username); // 👈 important
+
+        // ✅ Update Navbar immediately
+        setUsername(res.data.user.username);
       }
      
       alert(res.data.message || "Login Successful!");
       setEmailOrMobile("");
       setOtp("");
       setShowOtp(false);
-      window.location.href = "/";
+      navigate("/"); // Redirect to homepage after login
     } catch (err) {
       alert(err.response?.data?.message || "Login Failed");
     }

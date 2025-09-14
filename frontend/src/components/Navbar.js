@@ -1,3 +1,4 @@
+
 import logo from "../Assets/logo.png"
 import "./Navbar.css";
 import { FaUser, FaShoppingCart, FaBox } from "react-icons/fa";
@@ -13,15 +14,18 @@ function Navbar() {
     const [showRegister, setShowRegister] = useState(false);
     const [username, setUsername] = useState(null);
     useEffect(() => {
-        const storedUser = localStorage.getItem("username");
-        if (storedUser) {
-            setUsername(storedUser);
+        const storedUser = localStorage.getItem("currentUser");
+        if (storedUser?.username) {
+            setUsername(storedUser.username);
+
+
         }
     }, []);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("username");
+        localStorage.removeItem("currentUser"); 
         setUsername(null);
         window.location.href = "/";
     };
@@ -88,7 +92,7 @@ function Navbar() {
                 <div className="overlay">
                     <div className="login-popup">
                         <span className="close-btn" onClick={() => setShowLogin(false)}>x</span>
-                        <LoginForm />
+                        <LoginForm setUsername={setUsername}/>
                     </div>
                 </div>
             )}

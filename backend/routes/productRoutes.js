@@ -15,11 +15,32 @@ router.get("/", async (req, res) => {
 
 router.post("/add", protect, adminOnly, async (req, res) => {
   try {
-    const { name, price, description, image, stock, category } = req.body;
-    if (!name || !price) {
-      return res.status(400).json({ message: "Name and Price are required" });
+    const { name, price, description, image, stock, category, subCategory } = req.body;
+    
+    // Validate required fields
+    if (!name || !price || !image) {
+      return res.status(400).json({ message: "Name, price, and image URL are required" });
     }
-    const product = new Product({ name,price,description,image,stock,category });
+
+    // Validate price and stock
+    if (price <= 0) {
+      return res.status(400).json({ message: "Price must be greater than 0" });
+    }
+    if (stock < 0) {
+      return res.status(400).json({ message: "Stock cannot be negative" });
+    }
+
+    const product = new Product({
+      name,
+      price,
+      description,
+      image,
+      stock,
+      category,
+      subcategory: subCategory, // Match the schema field name
+      originalPrice: price // Set original price same as price initially
+    });
+    
     await product.save();
 
     res.status(201).json({

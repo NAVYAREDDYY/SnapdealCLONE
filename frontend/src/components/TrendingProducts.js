@@ -7,17 +7,50 @@ function TrendingProducts() {
   const [products, setProducts] = useState([]);
   const scrollContainerRef = useRef(null);
 
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -220, behavior: 'smooth' });
-    }
-  };
+  // const scrollLeft = () => {
+  //   if (scrollContainerRef.current) {
+  //     scrollContainerRef.current.scrollBy({ left: -220, behavior: 'smooth' });
+  //   }
+  // };
 
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 220, behavior: 'smooth' });
-    }
-  };
+  // const scrollRight = () => {
+  //   if (scrollContainerRef.current) {
+  //     scrollContainerRef.current.scrollBy({ left: 220, behavior: 'smooth' });
+  //   }
+  // };
+// const scrollLeft = () => {
+//   if (scrollContainerRef.current) {
+//     const container = scrollContainerRef.current;
+//     const cardWidth = container.querySelector(".trending-card").offsetWidth;
+//     const cardsToScroll = 3; // scroll 3 cards at a time
+//     container.scrollBy({ left: -cardWidth * cardsToScroll, behavior: "smooth" });
+//   }
+// };
+
+// const scrollRight = () => {
+//   if (scrollContainerRef.current) {
+//     const container = scrollContainerRef.current;
+//     const cardWidth = container.querySelector(".trending-card").offsetWidth;
+//     const cardsToScroll = 3; // scroll 3 cards at a time
+//     container.scrollBy({ left: cardWidth * cardsToScroll, behavior: "smooth" });
+//   }
+// };
+const scrollLeft = () => {
+  if (scrollContainerRef.current) {
+    const container = scrollContainerRef.current;
+    const scrollAmount = container.offsetWidth; // scroll width of visible area
+    container.scrollBy({ left: -scrollAmount, behavior: "smooth" }); // scroll left
+  }
+};
+
+const scrollRight = () => {
+  if (scrollContainerRef.current) {
+    const container = scrollContainerRef.current;
+    const scrollAmount = container.offsetWidth; // scroll width of visible area
+    container.scrollBy({ left: scrollAmount, behavior: "smooth" }); // scroll right
+  }
+};
+
 
   useEffect(() => {
     axios.get("http://localhost:5000/products?limit=10") // Get 10 products for trending section
