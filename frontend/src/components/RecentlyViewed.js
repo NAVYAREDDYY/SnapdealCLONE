@@ -97,7 +97,11 @@ function RecentlyViewed() {
               <div className="recently-viewed-name">
                 {prod.name}
               </div>
-                <div  className="recently-viewed-rating" ><RatingDisplay  value={prod.rating || 0} showValue={false}/></div>
+                <div  className="recently-viewed-rating" > <RatingDisplay 
+    value={prod.averageRating || 0} 
+    showValue={false} 
+    readOnly={true} 
+  /></div>
 
               <div className="recently-viewed-price">
                 

@@ -82,7 +82,7 @@
 .product-card {
   border: 1px solid #ddd;
   border-radius: 8px;
-  overflow: hidden;
+  /* overflow: hidden; */
   transition: transform 0.2s;
 }
 

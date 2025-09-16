@@ -13,7 +13,7 @@ function CartPage() {
 
   return (
     <>
-    <div className="cart-header-section">
+    <div className="cart-headersection">
       {cartItems.length > 0 && (
         <div className="success-notification">
           <div className="notification-content">

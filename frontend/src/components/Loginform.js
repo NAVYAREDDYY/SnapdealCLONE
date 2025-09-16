@@ -37,19 +37,12 @@ function LoginForm({ setUsername }) {
         otp,
       });
        
-       if (res.data.token && res.data.user) {
-        dispatch(setUser({ ...res.data.user, token: res.data.token }));
-
-        // ✅ Save both full user & username separately
-        localStorage.setItem(
-          "currentUser",
-          JSON.stringify({ ...res.data.user, token: res.data.token })
-        );
-        localStorage.setItem("username", res.data.user.username); // 👈 important
-
-        // ✅ Update Navbar immediately
-        setUsername(res.data.user.username);
-      }
+      if (res.data.token && res.data.user) {
+  const userData = { ...res.data.user, token: res.data.token };
+  dispatch(setUser(userData));
+  localStorage.setItem("currentUser", JSON.stringify(userData));
+  setUsername(userData.username);
+}
      
       alert(res.data.message || "Login Successful!");
       setEmailOrMobile("");

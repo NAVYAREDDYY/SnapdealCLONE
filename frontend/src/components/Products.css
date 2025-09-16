@@ -1,56 +1,221 @@
-.products-container {
+.products-page {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  margin: 35px 80px; /* outer page margin */
 }
 
-.product-card {
-  width: 200px;
-  border: 1px solid #ddd;
-  border-radius: 2px;
-  padding: 10px;
-  text-align: center;
+.filters {
+  width: 220px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-right: 0; /* no gap between filters and products */
 }
 
+.filter-section {
+  margin-bottom: 20px;
+}
 
-button {
-  margin-top: 10px;
-  padding: 6px 12px;
-  background-color: #e40046;
-  color: white;
-  border: none;
-  border-radius: 4px;
+.color-option {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
   cursor: pointer;
 }
-.product-card a {
-  text-decoration: none; 
-  color: inherit;      
-  display: block;        
+
+.color-box {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-right: 8px;
+  border: 1px solid #ccc;
 }
+
+.products-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0; /* no gap between products */
+}
+
+
+/* .product-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+} */
 
 .product-card img {
   width: 100%;
-  border-radius: 0;
-   object-fit: cover;
-   height:180px;
+  height: 200px;
+  object-fit: contain;
   margin-bottom: 10px;
+
+}
+.product-card a {
+  text-decoration: none; /* remove underline */
+  color: inherit;        /* inherit text color */
+  outline: none;         /* remove blue outline on focus */
 }
 
+/* Optional: remove blue outline on focus */
+.product-card a:focus {
+  outline: none;
+}
 .product-card h6 {
-  margin: 5px 0;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  margin: 6px 0;
+  color: #333;
+  min-height: 36px;
+   
 }
 
 .product-card p {
-  color: #333;
-  font-weight: 500;
+  font-weight: bold;
+  color: #151515;
+  margin: 4px 0;
+ 
 }
 
-.product-card .original-price {
-  text-decoration: line-through;
+.original-price {
+  text-decoration:line-through;
+  font-size: 13px;
   color: #888;
-  margin-left: 5px;
+  margin-left: 6px;
+}
+
+
+.price-slider {
+  position: relative;
+  height: 40px;
+  margin-top: 10px;
+}
+
+/* Track for both sliders */
+.price-slider input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: #0c0c0c; /* grey track */
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: all;
+}
+
+/* First slider above second */
+.price-slider input[type="range"]:first-child {
+  z-index: 3;
+}
+
+/* Slider thumbs (Webkit) */
+.price-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #060606;
+  border: 2px solid #0a0a0a;
+  cursor: pointer;
+  margin-top: -6px; /* center on track */
+  position: relative;
+  z-index: 1;
+  top: 50%;   
+}
+
+/* Slider thumbs (Firefox) */
+.price-slider input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #050505;
+  border: 2px solid #080808;
+  cursor: pointer;
+  z-index: 1;
+  top: 50%;   
+}
+
+/* Firefox track */
+.price-slider input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: #0c0c0c;
+  border-radius: 2px;
+}
+
+/* Selected range highlight */
+.price-slider .range-track {
+  position: absolute;
+  height: 2px;
+  background: #080808;
+  border-radius: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index:2;
+}
+.product-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 0px;
+  padding: 0; /* remove inner padding */
+  text-align: center;
+  transition: box-shadow 0.2s ease;
+  margin: 0;
+  width: 100%;
+  overflow: hidden; /* clip content if needed */
+}
+
+/* Make link cover full card */
+.product-card a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.recently-viewed-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px; /* optional spacing inside */
+  box-sizing: border-box;
+}
+
+.recently-viewed-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.recently-viewed-name {
   font-size: 14px;
+  color: #333;
+  margin: 6px 0;
+  min-height: 36px;
+}
+
+.recently-viewed-rating {
+  margin-bottom: 6px;
+}
+
+.recently-viewed-price {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: bold;
+  color: #151515;
+}
+
+.recently-viewed-price .original {
+  text-decoration: line-through;
+  font-size: 13px;
+  color: #888;
+}
+
+.recently-viewed-discount {
+  color: #888;
+  font-size: 12px;
 }

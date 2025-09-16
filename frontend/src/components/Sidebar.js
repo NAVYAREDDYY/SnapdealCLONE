@@ -1,77 +1,60 @@
 import { FaSearch } from "react-icons/fa";
 import "./Sidebar.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 function Sidebar() {
   const [hoverIndex, setHoverIndex] = useState(null);
   const [flyoutOpen, setFlyoutOpen] = useState(false);
   const flyoutTimeout = useRef();
   const navigate = useNavigate();
-  const [subcategoryMap, setSubcategoryMap] = useState({});
 
   const categories = [
     {
       name: "Men's Fashion",
       image: "https://g.sdlcdn.com/imgs/k/v/x/Men_sitenavigation-b972a.jpg",
       sub: [
-        { name: "Clothing", items: ["T-Shirts", "Shirts"] },
-        { name: "Footwear", items: ["Formal Shoes", "Sports Shoes"] },
+        { items: ["CLOTHING","T-Shirts", "Shirts"] },
+        { items: ["FOOTWEAR","Formal Shoes", "Sports Shoes"] },
       ],
     },
     {
       name: "Women's Fashion",
       image: "https://g.sdlcdn.com/imgs/k/v/x/WoMen_sitenav-5a8ca.jpg",
       sub: [
-        { name: "Clothing", items: ["Tops", "Sarees"] },
-        { name: "Footwear", items: ["Heels", "Flats", "Sandals", "Boots"] },
-        { name: "Jewellery", items: ["Earrings", "Necklaces", "Bangles", "Rings"] },
+        { items: ["CLOTHING","Tops", "Sarees"] },
+        { items: ["FOOTWEAR","Heels", "Flats", "Sandals", "Boots"] },
+        { items: ["JEWELLERY","Earrings", "Necklaces", "Bangles", "Rings"] },
       ],
     },
     {
       name: "Home & Kitchen",
       image: "https://g.sdlcdn.com/imgs/k/v/x/HOme_sitenavigation-d7a00.jpg",
       sub: [
-        { name: "Kitchen Tools", items: ["Pans", "Cookware Sets"] },
-        { name: "Home Decor", items: ["Wall Art", "Vases"] },
+        { items: ["KITHCHEN TOOLS","Pans", "Cookware Sets"] },
+        { items: ["HOME DECOR","Wall Art", "Vases"] },
       ],
     },
     {
       name: "Toys, Kids' Fashion",
       image: "https://g.sdlcdn.com/imgs/k/v/x/Toys_Sitenavigation-ef666.jpg",
       sub: [
-        { name: "Toys", items: ["Puzzles", "Soft Toys"] },
-        { name: "Kids' Clothing", items: ["Dresses", "Pajamas"] },
+        { items: ["TOYS","Puzzles", "Soft Toys"] },
+        { items: ["KIDS","Dresses", "Pajamas"] },
       ],
     },
     {
       name: "Beauty, Health",
       image: "https://g.sdlcdn.com/imgs/k/v/x/Beauty_Site_navigation-5f3be.jpg",
       sub: [
-        { name: "Skin Care", items: ["Moisturizers", "Face Wash"] },
-        { name: "Personal Care", items: ["Shampoo", "Soap"] },
+        { items: ["SKIN CARE","Moisturizers", "Face Wash"] },
+        { items: ["PERSONAL CARE" ,"Shampoo", "Soap"] },
       ],
     },
   ];
 
-  useEffect(() => {
-    axios.get("http://localhost:5000/products")
-      .then(res => {
-        const map = {};
-        res.data.forEach(prod => {
-          if (prod.subcategory && !map[prod.subcategory]) {
-            map[prod.subcategory] = prod._id;
-          }
-        });
-        setSubcategoryMap(map);
-      })
-      .catch(err => console.error("Sidebar fetch error:", err));
-  }, []);
-
   const handleSubcategoryTap = (sub) => {
-    const productId = subcategoryMap[sub];
-    if (productId) navigate(`/product/${productId}`);
+    navigate(`/products?subcategory=${encodeURIComponent(sub)}`);
   };
 
   const handleMouseEnter = (idx) => {
@@ -110,24 +93,19 @@ function Sidebar() {
                 onMouseLeave={handleMouseLeave}
               >
                 <ul className="sidebar-sublist">
-                  {cat.sub.map((subCat) => (
-                    <li key={subCat.name}>
-                      <strong>{subCat.name}</strong>
-                      <ul>
-                        {subCat.items.map((item) => (
-                          <li
-                            key={item}
-                            onClick={() => handleSubcategoryTap(item)}
-                            onTouchStart={() => handleSubcategoryTap(item)}
-                          >
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
+                  {cat.sub.map((subCat, subIdx) =>
+                    subCat.items.map((item, i) => (
+                      <li
+                        key={item}
+                        onClick={() => handleSubcategoryTap(item)}
+                        onTouchStart={() => handleSubcategoryTap(item)}
+                        style={{ fontWeight: i === 0 ? "600" : "400" }} // First item bold
+                      >
+                        {item}
+                      </li>
+                    ))
+                  )}
                 </ul>
-
               </div>
             )}
           </li>

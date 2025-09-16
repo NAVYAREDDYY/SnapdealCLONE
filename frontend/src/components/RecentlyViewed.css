@@ -148,10 +148,10 @@
 
 .recently-viewed-rating {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   margin-top: 8px;
-  margin-left:60px;
+  margin-left:0px;
 }
 
 .rating-stars {

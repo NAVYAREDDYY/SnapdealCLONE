@@ -27,12 +27,22 @@
 .navbar-center {
     flex: 1;
     display: flex;
-    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    position: relative;
+    flex: 1;
+    max-width: 790px;
     
 }
 
 .search-input {
-    width: 60%;
+    width: 80%;
     padding: 8px;
     border: none;
     border-radius: 2px;
@@ -281,4 +291,40 @@ li{
 
 .login-btn:hover {
   background-color: #c7003a;
+}
+
+/* Search Styles */
+.search-input {
+    padding: 10px 15px;
+    /* border: 2px solid #e40046; */
+    border-radius: 2px;
+    width: 100%;
+    font-size: 14px;
+    outline: none;
+    background: white;
+}
+
+.search-input:focus {
+    border-color: #c70036;
+}
+
+.search-btn {
+    padding: 10px 20px;
+    background-color: #0a0a0a;
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+   
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    background-color: #060606;
+}
+
+.search-btn.searching {
+    background-color: #888;
+    cursor: not-allowed;
 }

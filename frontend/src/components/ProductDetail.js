@@ -4,28 +4,76 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Rating from "./Rating";
+
 import Footer from "./footer";
 import "./ProductDetail.css";
 import RatingDisplay from "./Rating";
 
+const getProductSizes = (product) => {
+  // If product has specific sizes defined, use those
+  if (product.sizes && product.sizes.length > 0) {
+    return product.sizes;
+  }
+
+  // Default sizes based on category
+  const categoryDefaults = {
+    "Men's Fashion": [
+      { name: 'S', inStock: true },
+      { name: 'M', inStock: true },
+      { name: 'L', inStock: true },
+      { name: 'XL', inStock: true },
+      { name: 'XXL', inStock: true }
+    ],
+    "Women's Fashion": [
+      { name: 'XS', inStock: true },
+      { name: 'S', inStock: true },
+      { name: 'M', inStock: true },
+      { name: 'L', inStock: true },
+      { name: 'XL', inStock: true }
+    ],
+    "Toys, Kids' Fashion": [
+      { name: '2-3Y', inStock: true },
+      { name: '4-5Y', inStock: true },
+      { name: '6-7Y', inStock: true },
+      { name: '8-9Y', inStock: true },
+      { name: '10-11Y', inStock: true }
+    ],
+    "Electronics": [{ name: 'Standard', inStock: true }],
+    "Home & Kitchen": [{ name: 'Default', inStock: true }],
+    "Beauty, Health": [{ name: 'Universal', inStock: true }]
+  };
+
+  // Return default sizes for the category or a universal default
+  return categoryDefaults[product.category] || [{ name: 'One Size', inStock: true }];
+};
 
 function ProductDetail() {
   const highlightsRef = useRef(null);
   const reviewsRef = useRef(null);
   const questionRef = useRef(null);
   const [openSection, setOpenSection] = useState("highlights");
+  const [reviews, setReviews] = useState([]);
+  const [reviewStats, setReviewStats] = useState({
+    totalReviews: 0,
+    averageRating: 0,
+    ratingCounts: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+  });
+  const [userReview, setUserReview] = useState({
+    rating: 0,
+    review: "",
+    title: "",
+  });
 
-  // Handlers for info links
-  // const handleScrollToReviews = () => {
-  //   reviewsRef.current && reviewsRef.current.scrollIntoView({ behavior: 'smooth' });
-  // };
   const handleScrollToQuestion = () => {
-    questionRef.current && questionRef.current.scrollIntoView({ behavior: 'smooth' });
+    questionRef.current &&
+      questionRef.current.scrollIntoView({ behavior: "smooth" });
   };
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [selectedImg] = useState(0);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [pincode, setPincode] = useState("");
+  const [pinMsg, setPinMsg] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,39 +91,133 @@ function ProductDetail() {
   }, [id]);
 
   useEffect(() => {
+    const saved = localStorage.getItem("selectedPincode");
+    if (saved) setPincode(saved);
+  }, []);
 
+  const validatePin = (val) => /^\d{6}$/.test(val);
+
+  const handleCheckPin = async () => {
+    setPinMsg("");
+    if (!validatePin(pincode)) {
+      setPinMsg("Please enter a valid 6-digit pincode");
+      return;
+    }
+    try {
+      const res = await axios.post("http://localhost:5000/api/pincode/check", { pincode, productId: id });
+      if (res.data?.available) {
+        setPinMsg("Delivery available");
+        localStorage.setItem("selectedPincode", pincode);
+      } else {
+        setPinMsg("Not available");
+      }
+    } catch (e) {
+      setPinMsg("Unable to check pincode");
+    }
+  };
+
+  useEffect(() => {
     if (product && product._id) {
       let ids = JSON.parse(localStorage.getItem("recentlyViewed") || "[]");
-      ids = ids.filter(id => id !== product._id);
+      ids = ids.filter((id) => id !== product._id);
       ids.unshift(product._id);
       if (ids.length > 10) ids = ids.slice(0, 10);
       localStorage.setItem("recentlyViewed", JSON.stringify(ids));
+        const fetchReviews = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/reviews/${product._id}/reviews`
+      );
+      setReviews(response.data.reviews);
+      setReviewStats(response.data.statistics);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+      fetchReviews();
     }
   }, [product]);
 
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/reviews/${product._id}/reviews`
+      );
+      setReviews(response.data.reviews);
+      setReviewStats(response.data.statistics);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    const token = JSON.parse(localStorage.getItem("currentUser"))?.token;
+
+    if (!token) {
+      alert("Please login to submit a review");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `http://localhost:5000/api/reviews/${product._id}/reviews`,
+        userReview,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      fetchReviews();
+      setUserReview({ rating: 0, review: "", title: "" });
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      alert(error.response?.data?.message || "Error submitting review");
+    }
+  };
+
   if (!product) return <p>Loading...</p>;
 
-
   const breadcrumbs = [
-    { label: product.category, to: ["Men's Fashion", "Women's Fashion", "Home & Kitchen", "Toys, Kids' Fashion", "Beauty, Health"].includes(product.category) ? "/" : `/products?category=${encodeURIComponent(product.category)}` },
-    { label: product.subcategory, to: `/products?subcategory=${encodeURIComponent(product.subcategory)}` },
-    { label: product.name }
+    {
+      label: product.category,
+      to: ["Men's Fashion", "Women's Fashion", "Home & Kitchen", "Toys, Kids' Fashion", "Beauty, Health"].includes(
+        product.category
+      )
+        ? "/"
+        : `/products?category=${encodeURIComponent(product.category)}`,
+    },
+    {
+      label: product.subcategory,
+      to: `/products?subcategory=${encodeURIComponent(product.subcategory)}`,
+    },
+    { label: product.name },
   ];
 
   const images = product.images && product.images.length > 0 ? product.images : [product.image];
 
-
   const handleAddToCart = () => {
-    dispatch(addToCart(product));
+    // Check if size is required but not selected
+    const sizes = getProductSizes(product);
+    if (sizes.length > 1 && !selectedSize) {
+      alert("Please select a size before adding to cart");
+      return;
+    }
+
+    dispatch(addToCart({
+      ...product,
+      selectedSize: selectedSize || sizes[0].name // Use first available size as default for one-size products
+    }));
     navigate("/cart");
   };
 
   return (
     <>
       <div className="product-breadcrumbs">
-
-
-        {breadcrumbs.map((crumb, idx) => (
+        {breadcrumbs.map((crumb, idx) =>
           crumb.to ? (
             <span key={crumb.label}>
               <Link to={crumb.to}>{crumb.label}</Link>
@@ -84,11 +226,11 @@ function ProductDetail() {
           ) : (
             <span key={crumb.label}>{crumb.label}</span>
           )
-        ))}
+        )}
       </div>
+
       <div className="snapdeal-detail">
         <div className="snapdeal-main-row">
-
           <div className="snapdeal-gallery-col">
             <div className="snapdeal-img-row">
               <div className="snapdeal-small-img-wrap">
@@ -100,99 +242,95 @@ function ProductDetail() {
             </div>
           </div>
 
-
           <div className="snapdeal-info">
             <h1 className="snapdeal-title">{product.name}</h1>
 
             <div className="snapdeal-rating-row">
-              <Rating value={product.rating || 0} showValue={true} />
-
+               <RatingDisplay value={reviewStats.averageRating} showValue={false} readOnly={true} />
               <span className="snapdeal-separator">|</span>
-              <span className="snapdeal-blue">{product.numRatings || 0} Ratings</span>
-
+              <span className="snapdeal-blue">{reviewStats.totalReviews} {reviewStats.totalReviews === 1 ? 'Rating' : 'Ratings'}</span>
               <span className="snapdeal-separator">|</span>
-              <span className="snapdeal-blue">{product.numReviews || 0} Reviews</span>
-
+              <span className="snapdeal-blue">{reviewStats.totalReviews} {reviewStats.totalReviews === 1 ? 'Review' : 'Reviews'} </span>
               <span className="snapdeal-separator">|</span>
               <span className="snapdeal-blue">{product.numSelfies || 0} Selfies</span>
-
               <span className="snapdeal-separator">|</span>
-              <span
-                className="snapdeal-link"
-                style={{ cursor: "pointer" }}
-                onClick={handleScrollToQuestion}
-              >
+              <span className="snapdeal-link" style={{ cursor: "pointer" }} onClick={handleScrollToQuestion}>
                 Have a question?
               </span>
             </div>
 
-
             <hr className="rating-divider" />
 
             <div className="snapdeal-price-row">
-              <span className="snapdeal-mrp">MRP <span className="snapdeal-mrp-strike">₹{product.originalPrice || (product.price + 200)}</span></span>
+              <span className="snapdeal-mrp">
+                MRP <span className="snapdeal-mrp-strike">₹{product.originalPrice || (product.price + 200)}</span>
+              </span>
               <span className="snapdeal-tax">(Inclusive of all taxes)</span>
             </div>
             <div className="snapdeal-offer-row">
               <span className="snapdeal-price">Rs. {product.price}</span>
-              <span className="snapdeal-discount">{product.originalPrice ? Math.round(100 - (product.price / product.originalPrice) * 100) : 38}% OFF</span>
+              <span className="snapdeal-discount">
+                {product.originalPrice ? Math.round(100 - (product.price / product.originalPrice) * 100) : 38}% OFF
+              </span>
             </div>
 
+            <div className="snapdeal-color-row">
+              {/* Existing color section */}
+            </div>
 
+            <div className="snapdeal-size-row">
+              <h3 className="size-title">Select Size</h3>
+              <div className="size-options">
+                {getProductSizes(product).map((size, index) => (
+                  <button
+                    key={index}
+                    className={`size-button ${selectedSize === size.name ? 'selected' : ''} ${!size.inStock ? 'out-of-stock' : ''}`}
+                    onClick={() => setSelectedSize(size.name)}
+                    disabled={!size.inStock}
+                  >
+                    {size.name}
+                  </button>
+                ))}
+              </div>
+              {selectedSize && <p className="selected-size">Selected Size: {selectedSize}</p>}
+            </div>
 
-
-
-            {/* Static Color Section */}
             <div className="snapdeal-color-row">
               <span className="snapdeal-color-label">Color</span>
               <div className="snapdeal-color-list">
                 <div className="snapdeal-color-item selected">
                   <img src={images[0]} alt={product.name} />
-
                 </div>
               </div>
             </div>
-
-
 
             <div className="snapdeal-actions">
               <button className="snapdeal-cart-btn" onClick={handleAddToCart}>ADD TO CART</button>
               <button className="snapdeal-buy-btn">BUY NOW</button>
             </div>
 
-
-
             <div className="snapdeal-delivery-row">
               <span className="snapdeal-delivery-label">Delivery</span>
               <div className="snapdeal-pincode-wrapper">
-                <input
-                  type="text"
-                  placeholder="Enter pincode"
-                  className="snapdeal-pincode-input"
-                />
-                <button className="snapdeal-check-btn">Check</button>
+                <input type="text" placeholder="Enter pincode" className="snapdeal-pincode-input" value={pincode} onChange={(e)=> setPincode(e.target.value.replace(/[^0-9]/g, "").slice(0,6))} />
+                <button className="snapdeal-check-btn" onClick={handleCheckPin}>Check</button>
               </div>
+              {pinMsg && (
+                <div style={{ marginTop: 6, color: pinMsg === "Delivery available" ? "#388e3c" : "#d32f2f" }}>
+                  {pinMsg}
+                </div>
+              )}
               <span className="snapdeal-delivery-time">
                 Generally delivered in 6 - 10 days
               </span>
             </div>
-            <div><span className="extrainfo"> 7 Days Easy Returns : We assure easy return of purchased items within 7 days of delivery</span></div>
-
-
-
-
-
-
-
-
-
-
-
+            <div>
+              <span className="extrainfo">
+                7 Days Easy Returns : We assure easy return of purchased items within 7 days of delivery
+              </span>
+            </div>
           </div>
-
-
         </div>
-
       </div>
 
       {/* Tabbed menu for below sections */}
@@ -206,7 +344,7 @@ function ProductDetail() {
           {/* Accordion Section */}
           <div className="snapdeal-accordion">
             {/* Highlights */}
-            <div className="snapdeal-accordion-item">
+            <div className="snapdeal-accordion-item" ref={highlightsRef}>
               <div
                 className="snapdeal-accordion-header"
                 onClick={() =>
@@ -240,7 +378,7 @@ function ProductDetail() {
             </div>
 
             {/* Ratings & Reviews */}
-            <div className="snapdeal-accordion-item">
+            <div className="snapdeal-accordion-item" ref={reviewsRef}>
               <div
                 className="snapdeal-accordion-header"
                 onClick={() =>
@@ -250,32 +388,85 @@ function ProductDetail() {
                 <span className="snapdeal-accordion-icon">
                   {openSection === "reviews" ? "−" : "+"}
                 </span>
-                <span className="snapdeal-accordion-title">Other specifications</span>
+                <span className="snapdeal-accordion-title">Ratings & Reviews</span>
               </div>
               {openSection === "reviews" && (
                 <div className="snapdeal-accordion-content">
-                  <h6>Ratings & Reviews</h6>
-                  <div><RatingDisplay productId={product._id} /></div>
-                  <div className="snapdeal-review-list">
-                    <div className="snapdeal-review-item">
-                      <strong>Rohit S.</strong> <span>★★★★★</span>
-                      <p>Great product, fast delivery. Highly recommended!</p>
+                  <div className="rating-summary">
+                    <div className="rating-average">
+                      <div className="average-score">{reviewStats.averageRating.toFixed(1)}</div>
+                      <RatingDisplay value={reviewStats.averageRating} showValue={false} readOnly={true} />
+                      <div className="total-ratings">
+                        {reviewStats.totalReviews} {reviewStats.totalReviews === 1 ? 'Review' : 'Reviews'}
+                      </div>
                     </div>
-                    <div className="snapdeal-review-item">
-                      <strong>Anjali P.</strong> <span>★★★★☆</span>
-                      <p>Good quality, but packaging could be better.</p>
+
+                    <div className="rating-bars">
+                      {[5, 4, 3, 2, 1].map(stars => (
+                        <div key={stars} className="rating-bar">
+                          <span className="bar-label">{stars} Star</span>
+                          <div className="bar-fill">
+                            <div
+                              className="bar-value"
+                              style={{
+                                width: `${(reviewStats.ratingCounts[stars] / reviewStats.totalReviews * 100) || 0}%`
+                              }}
+                            />
+                          </div>
+                          <span className="bar-count">{reviewStats.ratingCounts[stars]}</span>
+                        </div>
+                      ))}
                     </div>
-                    <div className="snapdeal-review-item">
-                      <strong>Vikram T.</strong> <span>★★★★★</span>
-                      <p>Value for money. Will buy again.</p>
-                    </div>
+                  </div>
+
+                  {/* Review Form */}
+                  <div className="rating-form">
+                    <h3>Write a Review</h3>
+                    <form onSubmit={handleReviewSubmit}>
+                      <RatingDisplay
+                        value={userReview.rating}
+                        readOnly={false}
+                        onRate={(rating) => setUserReview(prev => ({ ...prev, rating }))}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Review Title (optional)"
+                        value={userReview.title}
+                        onChange={(e) => setUserReview(prev => ({ ...prev, title: e.target.value }))}
+                      />
+                      <textarea
+                        placeholder="Write your review here..."
+                        value={userReview.review}
+                        onChange={(e) => setUserReview(prev => ({ ...prev, review: e.target.value }))}
+                        required
+                      />
+                      <button type="submit">Submit Review</button>
+                    </form>
+                  </div>
+
+                  {/* Reviews List */}
+                  <div className="reviews-list">
+                    {reviews.length > 0 ? reviews.map((review, index) => (
+                      <div key={index} className="review-item">
+                        <div className="review-header">
+                          <RatingDisplay value={review.rating} readOnly={true} />
+                          <span className="review-user">{review.userName}</span>
+                          <span className="review-date">
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        {review.title && <h4>{review.title}</h4>}
+                        <p className="review-text">{review.review}</p>
+                        {review.verifiedPurchase && <span className="verified-purchase">Verified Purchase</span>}
+                      </div>
+                    )) : <p className="no-reviews">Be the first to review this product!</p>}
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Have a Question */}
-            <div className="snapdeal-accordion-item">
+            {/* Have a Question / Terms */}
+            <div className="snapdeal-accordion-item" ref={questionRef}>
               <div
                 className="snapdeal-accordion-header"
                 onClick={() =>
@@ -289,27 +480,16 @@ function ProductDetail() {
               </div>
               {openSection === "question" && (
                 <div className="snapdeal-accordion-content">
-                  
-                  
-                    <p>
-                      The images represent actual product though color of the image and
-                      product may slightly differ. Snapdeal does not select, edit, modify,
-                      alter, add or supplement the information...
-                    </p>
-                  
+                  <p>
+                    The images represent actual product though color of the image and
+                    product may slightly differ. Snapdeal does not select, edit, modify,
+                    alter, add or supplement the information...
+                  </p>
                   <p>Click here to ask or see answers from other buyers.</p>
                 </div>
               )}
             </div>
           </div>
-
-
-
-
-
-
-
-
         </div>
       </div>
 

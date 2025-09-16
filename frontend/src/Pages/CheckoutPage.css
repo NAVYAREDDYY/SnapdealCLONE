@@ -1,7 +1,7 @@
 .checkout-container {
   width: 90%;
   margin: 30px auto;
-  background: #fff;
+  background: #f4f5f7;
 }
 
 .checkout-title {
@@ -26,9 +26,9 @@
 }
 
 .checkout-section {
-  background: #fafafa;
+  background:#fff ;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 3px;
   padding: 15px;
   margin-bottom: 20px;
 }
@@ -36,18 +36,18 @@
 .address-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .address-form input {
   padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 .order-summary {
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 3px;
   padding: 15px;
   background: #fafafa;
 }

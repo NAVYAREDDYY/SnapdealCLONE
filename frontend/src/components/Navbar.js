@@ -5,26 +5,28 @@ import { FaUser, FaShoppingCart, FaBox } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import LoginForm from "./Loginform";
 import RegisterForm from "./Register";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function Navbar() {
+    const navigate = useNavigate();
     const cartCount = useSelector((state) => state.cart.items.length);
     const [showLogin, setShowLogin] = useState(false);
     const [showRegister, setShowRegister] = useState(false);
     const [username, setUsername] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [isSearching] = useState(false);
     useEffect(() => {
         const storedUser = localStorage.getItem("currentUser");
-        if (storedUser?.username) {
-            setUsername(storedUser.username);
-
-
-        }
+        if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser?.username) {
+        setUsername(parsedUser.username);
+    }  }
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("username");
+       
         localStorage.removeItem("currentUser"); 
         setUsername(null);
         window.location.href = "/";
@@ -39,16 +41,35 @@ function Navbar() {
             </Link>
 
             <div className="navbar-center">
-                <input
-                    type="text"
-                    placeholder="Search products & brands"
-                    className="search-input"
-                />
-                <button className="search-btn"> Search</button>
+                <div className="search-container">
+                    <input
+                        type="text"
+                        placeholder="Search products & brands"
+                        className="search-input"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter' && searchQuery.trim()) {
+                                navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                            }
+                        }}
+                    />
+                    <button 
+                        className={`search-btn ${isSearching ? 'searching' : ''}`}
+                        onClick={() => {
+                            if (searchQuery.trim()) {
+                                navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                            }
+                        }}
+                        disabled={isSearching}
+                    >
+                        {isSearching ? 'Searching...' : 'Search'}
+                    </button>
+                </div>
                 <Link to="/cart" className="cart-btn">
-                  Cart
-                  <FaShoppingCart />
-                  {cartCount > 0 && <span className="cart-count-badge">{cartCount}</span>}
+                    Cart
+                    <FaShoppingCart />
+                    {cartCount > 0 && <span className="cart-count-badge">{cartCount}</span>}
                 </Link>
                 <div className="dropdownWrapper">
                     <button className="sign-in"><span>{username ? username : "Sign In"}</span> <FaUser /></button>

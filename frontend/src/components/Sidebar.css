@@ -113,3 +113,17 @@
 .sidebar-sub-sublist li:hover {
   color: #ff3d00;
 }
+/* Subcategory list - all items in the same column */
+.sidebar-sublist li {
+  font-size: 13px;
+  color: #414141;
+  cursor: pointer;
+  margin: 0;      /* Remove vertical spacing */
+  padding: 5px;     /* Remove padding */
+  line-height: 1.2; /* Optional: controls spacing between lines */
+}
+
+/* Make first item bold */
+.sidebar-sublist li:first-child {
+  font-weight: 600;
+}

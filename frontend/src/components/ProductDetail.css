@@ -19,6 +19,168 @@
   color: #777;
   text-decoration: none;
 }
+
+/* Rating & Review Styles */
+.rating-summary {
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.rating-average {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.average-score {
+  font-size: 48px;
+  font-weight: bold;
+  color: #333;
+}
+
+.total-ratings {
+  color: #666;
+  font-size: 14px;
+}
+
+.rating-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar-label {
+  min-width: 60px;
+  font-size: 14px;
+  color: #666;
+}
+
+.bar-fill {
+  flex-grow: 1;
+  height: 8px;
+  background-color: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-value {
+  height: 100%;
+  background-color: #ffc107;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.bar-count {
+  min-width: 40px;
+  text-align: right;
+  color: #666;
+  font-size: 14px;
+}
+
+.rating-form {
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.rating-form h3 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.rating-form input,
+.rating-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.rating-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.rating-form button {
+  background-color: #e40046;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.rating-form button:hover {
+  background-color: #c70036;
+}
+
+.reviews-list {
+  margin-top: 20px;
+}
+
+.review-item {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.review-user {
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+.review-date {
+  color: #888;
+  font-size: 12px;
+}
+
+.review-text {
+  color: #555;
+  line-height: 1.5;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.verified-purchase {
+  display: inline-block;
+  background-color: #4CAF50;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.no-reviews {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+  font-style: italic;
+}
+
 .product-breadcrumbs a:hover {
   text-decoration: underline;
 }
@@ -172,6 +334,75 @@
 .snapdeal-color-list {
   display: flex;
   gap: 8px; /* space between color options */
+}
+
+/* Size Selection Styles */
+.snapdeal-size-row {
+  margin: 20px 0;
+}
+
+.size-title {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.size-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.size-button {
+  min-width: 45px;
+  height: 45px;
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+}
+
+.size-button:hover:not(.out-of-stock) {
+  border-color: #e40046;
+  color: #e40046;
+}
+
+.size-button.selected {
+  border-color: #e40046;
+  color: #e40046;
+  background-color: #fff0f3;
+}
+
+.size-button.out-of-stock {
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.size-button.out-of-stock::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #999;
+  transform: rotate(-45deg);
+}
+
+.selected-size {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
 }
 
 .snapdeal-color-item {

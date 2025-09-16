@@ -1,6 +1,6 @@
-.cart-header-section {
+.cart-headersection {
   position: fixed;
-  top: 120px; /* Added 20px gap from navbar */
+  top: 100px; /* Added 20px gap from navbar */
   left: 90px;
   right: 60px;
   z-index: 999;
@@ -133,7 +133,7 @@
 
 .total-amount {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 400;
   color: #333;
 }
 
