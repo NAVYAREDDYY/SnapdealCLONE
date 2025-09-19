@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const Vendor = require("../models/Vendor");
 
 const protect = async (req, res, next) => {
   try {
@@ -34,7 +35,7 @@ const protect = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid token format" });
     }
 
-    req.user = { _id: decoded.id, isAdmin: decoded.isAdmin };
+    req.user = { _id: decoded.id, isAdmin: decoded.isAdmin, role: decoded.role };
     console.log("[Auth] User authorized:", req.user);
     next();
   } catch (error) {
@@ -61,3 +62,20 @@ const adminOnly = (req, res, next) => {
 };
 
 module.exports = { protect, adminOnly };
+
+// Middleware to allow only vendors
+const vendorOnly = async (req, res, next) => {
+  try {
+    if (!req.user || req.user.role !== 'vendor') {
+      return res.status(403).json({ message: 'Vendor access only' });
+    }
+    // Ensure vendor exists
+    const vendor = await Vendor.findById(req.user._id).select('_id');
+    if (!vendor) return res.status(403).json({ message: 'Vendor not found' });
+    next();
+  } catch (e) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+}
+
+module.exports.vendorOnly = vendorOnly;

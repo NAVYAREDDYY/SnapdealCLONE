@@ -5,10 +5,10 @@ const connectDB = require('./db/config')
 const authroutes = require('./routes/authroutes')
 const otproutes = require('./routes/otproutes')
 const productRoutes = require('./routes/productRoutes')
-const adminRoutes = require('./routes/admin')
 const paymentRoutes = require('./routes/paymentRoutes')
 const orderRoutes = require('./routes/orderRoutes')
 const reviewRoutes = require('./routes/reviewRoutes')
+const vendorRoutes = require('./routes/vendorRoutes')
 
 
 const app = express()
@@ -26,8 +26,8 @@ app.use("/products", productRoutes);
 
 app.use("/api/payment", paymentRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/admin", adminRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/vendor", vendorRoutes);
 
 // Simple serviceable pincode list; expand or replace with DB as needed
 const SERVICEABLE_PINCODES = new Set([

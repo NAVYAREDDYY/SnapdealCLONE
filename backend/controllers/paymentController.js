@@ -1,6 +1,7 @@
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const Order = require('../models/order');
+const Product = require('../models/product');
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -20,10 +21,24 @@ const createOrder = async (req, res) => {
       payment_capture: 1
     });
 
+    // Enrich items with vendorId and default itemStatus
+    const productIds = (items || []).map(i => i.productId).filter(Boolean);
+    const products = await Product.find({ _id: { $in: productIds } }).select('_id vendorId name price');
+    const productIdToVendor = new Map(products.map(p => [String(p._id), String(p.vendorId || '')]));
+
+    const enrichedItems = (items || []).map(i => ({
+      productId: i.productId,
+      name: i.name,
+      quantity: i.quantity,
+      price: i.price,
+      vendorId: productIdToVendor.get(String(i.productId)) || undefined,
+      itemStatus: 'pending'
+    }));
+
     // Create order in database
     const newOrder = new Order({
       userId: req.user._id,
-      items: items,
+      items: enrichedItems,
       totalAmount: amount,
       shippingAddress: shippingAddress,
       paymentInfo: {
@@ -70,10 +85,28 @@ const verifyPayment = async (req, res) => {
           'paymentInfo.razorpayPaymentId': razorpay_payment_id,
           'paymentInfo.razorpaySignature': razorpay_signature,
           paymentStatus: 'completed',
-          orderStatus: 'processing'
+          orderStatus: 'processing',
+          status: 'processing'
         },
         { new: true }
       );
+
+      // Decrement stock for each product item in this order
+      try {
+        if (updatedOrder && Array.isArray(updatedOrder.items)) {
+          const updates = updatedOrder.items.map(async (it) => {
+            if (!it.productId || !it.quantity) return;
+            await Product.updateOne(
+              { _id: it.productId },
+              { $inc: { stock: -Math.max(1, it.quantity) } }
+            );
+          });
+          await Promise.all(updates);
+        }
+      } catch (stockErr) {
+        // Log but do not fail the payment response
+        console.error('Stock decrement failed:', stockErr);
+      }
 
       res.status(200).json({
         success: true,

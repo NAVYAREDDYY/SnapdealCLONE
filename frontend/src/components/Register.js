@@ -3,8 +3,9 @@ import axios from "axios";
 import "./Register.css"
 
 function RegisterForm({ setUsername }) {
-  const [name, setName] = useState("");
+  const [username, setUname] = useState("");
   const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
@@ -12,20 +13,22 @@ function RegisterForm({ setUsername }) {
 
     try {
       const res = await axios.post("http://localhost:5000/authroutes/register", {
-        name,
+        username,
         email,
+        mobile,
         password,
       });
 
       alert(res.data.message);
-      if (res.data.token) {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        setUsername(res.data.user.name);
+      if (res.data.token && res.data.user) {
+        const currentUser = { ...res.data.user, token: res.data.token };
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        setUsername(currentUser.username);
       }
 
-      setName("");
+      setUname("");
       setEmail("");
+      setMobile("");
       setPassword("");
     } catch (err) {
       if (err.response) {
@@ -43,9 +46,9 @@ function RegisterForm({ setUsername }) {
 
         <input
           type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUname(e.target.value)}
           required
         />
 
@@ -55,6 +58,21 @@ function RegisterForm({ setUsername }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+        />
+
+        <input
+          type="tel"
+          placeholder="Mobile (10 digits)"
+          value={mobile}
+          onChange={(e) => {
+            const v = e.target.value.replace(/\D/g, '').slice(0,10);
+            setMobile(v);
+          }}
+          inputMode="numeric"
+          pattern="[0-9]{10}"
+          title="Enter a 10-digit mobile number"
+          required
+          autoComplete="tel"
         />
 
         <input

@@ -1,5 +1,6 @@
 const express = require("express");
 const { protect, adminOnly } = require("../middleware/authmiddleware")
+const { vendorOnly } = require("../middleware/authmiddleware")
 const Product = require('../models/product')
 
 const router = express.Router();
@@ -32,7 +33,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/add", protect, adminOnly, async (req, res) => {
+// Admins can add products generally; vendors can add their own linked products
+router.post("/add", protect, async (req, res) => {
   try {
     const { name, price, description, image, stock, category, subCategory, subcategory, color, sizes, hasSizes } = req.body;
     if (!name || !price) {
@@ -66,7 +68,8 @@ router.post("/add", protect, adminOnly, async (req, res) => {
       subcategory: subcategory || subCategory, // support both keys from client
       color,
       sizes: normalizedSizes,
-      hasSizes: typeof hasSizes === 'boolean' ? hasSizes : undefined
+      hasSizes: typeof hasSizes === 'boolean' ? hasSizes : undefined,
+      vendorId: req.user.role === 'vendor' ? req.user._id : undefined
     });
     await product.save();
 
@@ -109,10 +112,19 @@ router.post("/:id/rate",protect,async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.put("/:id", protect, adminOnly, async (req, res) => {
+router.put("/:id", protect, async (req, res) => {
   try {
     console.log("Update request received for product:", req.params.id);
     console.log("Update data:", req.body);
+    const productDoc = await Product.findById(req.params.id);
+    if (!productDoc) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    const isAdmin = req.user?.isAdmin;
+    const isOwnerVendor = req.user?.role === 'vendor' && String(productDoc.vendorId || '') === String(req.user._id);
+    if (!isAdmin && !isOwnerVendor) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
 
     const product = await Product.findByIdAndUpdate(
       req.params.id,
@@ -131,12 +143,16 @@ router.put("/:id", protect, adminOnly, async (req, res) => {
     res.status(500).json({ message: "Error updating product", error: err.message });
   }
 });
-router.delete("/:id", protect, adminOnly, async (req, res) => {
+router.delete("/:id", protect, async (req, res) => {
   try {
-    const result = await Product.findByIdAndDelete(req.params.id);
-    if (!result) {
-      return res.status(404).json({ message: "Product not found" });
+    const productDoc = await Product.findById(req.params.id);
+    if (!productDoc) return res.status(404).json({ message: "Product not found" });
+    const isAdmin = req.user?.isAdmin;
+    const isOwnerVendor = req.user?.role === 'vendor' && String(productDoc.vendorId || '') === String(req.user._id);
+    if (!isAdmin && !isOwnerVendor) {
+      return res.status(403).json({ message: "Not authorized" });
     }
+    const result = await Product.findByIdAndDelete(req.params.id);
     res.json({ message: "Product deleted successfully", product: result });
   } catch (err) {
     console.error("Delete error:", err);

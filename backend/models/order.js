@@ -12,9 +12,18 @@ const orderSchema = new mongoose.Schema({
       ref: 'Product',
       required: true
     },
+    vendorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Vendor'
+    },
     name: String,
     quantity: Number,
-    price: Number
+    price: Number,
+    itemStatus: {
+      type: String,
+      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      default: 'pending'
+    }
   }],
   totalAmount: {
     type: Number,
@@ -35,6 +44,12 @@ const orderSchema = new mongoose.Schema({
   paymentStatus: {
     type: String,
     enum: ['pending', 'completed', 'failed'],
+    default: 'pending'
+  },
+  // Top-level order status (alias to orderStatus for compatibility with new UI)
+  status: {
+    type: String,
+    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
     default: 'pending'
   },
   orderStatus: {

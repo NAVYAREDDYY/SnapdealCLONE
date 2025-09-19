@@ -441,6 +441,49 @@
   margin-right: 40px;
   background-color: #ffffff;
 }
+.snapdeal-below-wrap{
+  display:flex;
+  gap:24px;
+  align-items:flex-start;
+  margin-left:90px;
+  margin-right:40px;
+}
+.snapdeal-below-wrap .snapdeal-below-tabs{
+  flex: 0 0 80%;
+  margin-left: 0;
+  margin-right: 0;
+}
+.snapdeal-below-two-col{
+  display:flex;
+  gap:29px;
+}
+.snapdeal-right-sidebar{
+  flex: 0 0 18%;
+  margin-top: 27px;
+}
+.seller-card{
+  border:1px solid #eee;
+  background:#ffffff;
+  padding:12px;
+  border-radius:0px;
+  margin-bottom:16px;
+  height:190px;
+}
+.seller-title{font-size:12px;color:#777;margin-bottom:6px;}
+.seller-name{font-weight:600;margin-bottom:6px;}
+.seller-rating{font-size:12px;color:#444;margin-bottom:10px;}
+.seller-links{display:block;gap:12px}
+.seller-links a{color:#2874f0;text-decoration:none;font-size:15px}
+.sidebar-card{
+  border:1px solid #eee;
+  background:#ffffff;
+  padding:12px;
+  border-radius:0px;
+  margin-bottom:16px;
+}
+.sidebar-card-title{font-weight:600;margin-bottom:6px;}
+.sidebar-card-link{color:#2874f0;font-size:13px;}
+.sidebar-card-desc{font-size:13px;color:#666}
 .snapdeal-below-tab-menu {
   border-bottom: 1px solid #eee;
   margin-bottom: 20px;
@@ -461,6 +504,11 @@
   border-bottom: 2px solid #e40046;
 }
 
+
+.snapdeal-below-tab-content{
+  width: 100%;
+  box-sizing: border-box;
+}
 
 .snapdeal-separator {
   margin: 0 4px;
@@ -565,4 +613,8 @@
   color: #555;
   font-size: 13px;
   line-height: 1.5;
+}
+.view-store{
+  font-size: 14px;
+  display: block;
 }

@@ -20,6 +20,7 @@ const productSchema = new mongoose.Schema({
   image: { type: String, required: true },
   price: { type: Number, required: true },
   originalPrice: { type: Number }, 
+  vendorId: { type: mongoose.Schema.Types.ObjectId, ref: "Vendor" },
   reviews: [reviewSchema],
   description: { type: String },
   category: { type: String },

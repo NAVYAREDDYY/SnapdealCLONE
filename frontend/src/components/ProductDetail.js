@@ -334,13 +334,15 @@ function ProductDetail() {
       </div>
 
       {/* Tabbed menu for below sections */}
+      <div className="snapdeal-below-wrap">
       <div className="snapdeal-below-tabs">
         <div className="snapdeal-below-tab-menu">
           <button onClick={() => highlightsRef.current.scrollIntoView({ behavior: 'smooth' })}>Item Details</button>
           <button onClick={() => reviewsRef.current.scrollIntoView({ behavior: 'smooth' })}>Ratings & Reviews</button>
           <button onClick={() => questionRef.current.scrollIntoView({ behavior: 'smooth' })}>Have a Question?</button>
         </div>
-        <div className="snapdeal-below-tab-content">
+        <div className="snapdeal-below-two-col">
+          <div className="snapdeal-below-tab-content">
           {/* Accordion Section */}
           <div className="snapdeal-accordion">
             {/* Highlights */}
@@ -491,8 +493,38 @@ function ProductDetail() {
             </div>
           </div>
         </div>
+
+        </div>
       </div>
 
+      {/* Right Sidebar moved outside of snapdeal-below-tabs */}
+      <aside className="snapdeal-right-sidebar">
+        <div className="seller-card">
+          <div className="seller-title">Sold by</div>
+          <div className="seller-name">{product.vendorName || 'Store'}</div>
+          <div className="seller-rating">
+            <span className="stars">★★★★☆</span>
+            <span className="rating-count">(3.8)</span>
+          </div>
+          <div className="seller-links">
+            <a href="/" className="view-store">View Store</a>
+            <hr/>
+            <a href="/sell-on-snapdeal" target="_blank" rel="noopener noreferrer" className="sell-on">Sell On Snapdeal</a>
+          </div>
+        </div>
+
+        <div className="sidebar-card">
+          <div className="sidebar-card-title">Explore More</div>
+          <div className="sidebar-card-link">More {product.subcategory || 'Similar'} Products</div>
+        </div>
+
+        <div className="sidebar-card">
+          <div className="sidebar-card-title">In Same Price</div>
+          <div className="sidebar-card-desc">Discover more in this range</div>
+        </div>
+      </aside>
+      </div>
+      
       <Footer />
     </>
   );

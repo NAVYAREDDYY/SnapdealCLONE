@@ -22,11 +22,11 @@ function CheckoutPage() {
     state: "",
   });
   const [isSaved, setIsSaved] = useState(false);
-  // Check login status on mount
+  
   useEffect(() => {
     if (!user) {
       alert("Please login to proceed with checkout");
-      navigate("/login"); // ✅ safe inside useEffect
+      navigate("/login");
     }
   }, [user, navigate]);
 
