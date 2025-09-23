@@ -7,36 +7,54 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const { search, category, subcategory } = req.query;
-let query = {};
+    let query = {};
 
-// Search by text
-if (search) {
-  const searchRegex = new RegExp(search, "i");
-  query.$or = [
-    { name: searchRegex },
-    { description: searchRegex },
-    { category: searchRegex },
-    { subcategory: searchRegex }
-  ];
-}
+    // 🔹 Synonym / keyword mapping
+    const keywordMap = {
+      clothing: ["Men's Fashion", "Women's Fashion"],
+      shoes: ["Formal Shoes","Sports Shoes"],
+      makeup: ["Beauty, Health"],
+      kids:["Toys, Kids' Fashion"],
+      kitchen:["Pans", "Cookware Sets"],
+      Home:["Home & Kitchen"]
+    };
 
-// Filter by category
-if (category) {
-  query.category = new RegExp(category, "i");
-}
+    // Search by text or mapped keywords
+    if (search) {
+      const lower = search.toLowerCase();
+      const mapped = keywordMap[lower] || []; 
 
-// Filter by subcategory
-if (subcategory) {
-  query.subcategory = new RegExp(subcategory, "i");
-}
+      const searchRegex = new RegExp(search, "i");
 
+      query.$or = [
+        { name: searchRegex },
+        { description: searchRegex },
+        { category: searchRegex },
+        { subcategory: searchRegex },
+        // 👇 extra condition: if search is mapped, match categories
+        ...(mapped.length ? [{ category: { $in: mapped } }] : [])
+      ];
+    }
+
+    // Filter by category
+    if (category) {
+      query.category = new RegExp(category, "i");
+    }
+
+    // Filter by subcategory
+    if (subcategory) {
+      query.subcategory = new RegExp(subcategory, "i");
+    }
 
     const products = await Product.find(query);
     res.status(200).json(products);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch products", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch products", error: err.message });
   }
 });
+
 
 // Admins can add products generally; vendors can add their own linked products
 // POST /products → add a product (admin only)
