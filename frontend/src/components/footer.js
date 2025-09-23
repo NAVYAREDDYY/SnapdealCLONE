@@ -6,22 +6,22 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-top">
         <div>
-          <i className="fas fa-lock fa-2x"></i>
+        <i className="paymentIcon footerIconsImg"></i>
           <h5 className="h5">100% SECURE PAYMENTS</h5>
           <p>Moving your card details to a much more secured place</p>
         </div>
         <div>
-          <i className="fas fa-shield-alt fa-2x"></i>
+        <i class="trustpayIcon footerIconsImg"></i>
           <h5 className="h5">TRUSTPAY</h5>
           <p>100% Payment Protection. Easy Return Policy</p>
         </div>
         <div>
-          <i className="fas fa-headset fa-2x"></i>
+        <i class="customerCareIcon footerIconsImg"></i>
           <h5 className="h5">HELP CENTER</h5>
           <p>Got a question? Look no further.</p>
         </div>
         <div>
-          <i className="fas fa-mobile-alt fa-2x"></i>
+        <i class="shoponGoIcon footerIconsImg"></i>
           <h5 className="h5" >SHOP ON THE GO</h5>
 
           <p>Download the app and get exciting offers</p>

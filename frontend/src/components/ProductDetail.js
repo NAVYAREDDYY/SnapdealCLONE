@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -53,6 +53,10 @@ function ProductDetail() {
   const questionRef = useRef(null);
   const [openSection, setOpenSection] = useState("highlights");
   const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
+
+  const user = useSelector((state) => state.user.currentUser) || JSON.parse(localStorage.getItem("currentUser") || "null");
   const [reviewStats, setReviewStats] = useState({
     totalReviews: 0,
     averageRating: 0,
@@ -182,6 +186,7 @@ function ProductDetail() {
   if (!product) return <p>Loading...</p>;
 
   const breadcrumbs = [
+    { label: "Home", to: "/" },
     {
       label: product.category,
       to: ["Men's Fashion", "Women's Fashion", "Home & Kitchen", "Toys, Kids' Fashion", "Beauty, Health"].includes(
@@ -214,6 +219,121 @@ function ProductDetail() {
     navigate("/cart");
   };
 
+  
+  // const sizes = getProductSizes(product);
+  // if (sizes.length > 1 && !selectedSize) {
+  //   alert("Please select a size before buying");
+  //   return;
+  // }
+  const initializeRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+  const handlePayment = async () => {
+    const currentUser = user || JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser || !currentUser.token) {
+      alert("Please login to proceed with payment");
+      navigate("/login");
+      return;
+    }
+  
+    if (!selectedSize) {
+      alert("Please select a size before buying");
+      return;
+    }
+  
+    setLoading(true);
+  
+    const totalPrice = product.price;
+    const deliveryCharge = totalPrice > 500 ? 0 : 40;
+  
+    try {
+      const razorpayLoaded = await initializeRazorpay();
+      if (!razorpayLoaded) {
+        alert("Razorpay SDK failed to load");
+        setLoading(false);
+        return;
+      }
+  
+      const orderData = {
+        amount: (totalPrice + deliveryCharge),
+        items: [{
+          productId: product._id,
+          name: product.name,
+          quantity: 1,
+          price: product.price
+        }],
+        shippingAddress: {
+          fullName: currentUser.name || "User",
+          mobile: currentUser.mobile || "9999999999",
+          pincode: pincode || "000000",
+          city: "Default City",
+          state: "Default State",
+          country: "India"
+        }
+      };
+  
+      const { data } = await axios.post(
+        "http://localhost:5000/api/payment/create-order",
+        orderData,
+        { headers: { Authorization: `Bearer ${currentUser.token}` } }
+      );
+  
+      const options = {
+        key: data.key, // or data.key from backend
+        amount: data.order.amount,
+        currency: "INR",
+        name: "Snapdeal Clone",
+        description: "Purchase Payment",
+        order_id: data.order.id,
+        handler: async function (response) {
+          try {
+            const verifyData = await axios.post(
+              "http://localhost:5000/api/payment/verify-payment",
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              },
+              { headers: { Authorization: `Bearer ${currentUser.token}` } }
+            );
+  
+            if (verifyData.data.success) {
+              alert("Payment successful! Your order has been placed.");
+              navigate("/my-orders");
+            } else {
+              alert("Payment verification failed.");
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Payment verification failed");
+          }
+        },
+        prefill: {
+          name: currentUser.name || "User",
+          email: currentUser.email || "user@example.com",
+          contact: currentUser.mobile || "9999999999"
+        },
+        theme: { color: "#e40046" }
+      };
+  
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+  
+    } catch (err) {
+      console.error("Payment error:", err);
+      alert("Something went wrong!");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  
   return (
     <>
       <div className="product-breadcrumbs">
@@ -238,6 +358,9 @@ function ProductDetail() {
               </div>
               <div className="snapdeal-main-img-wrap">
                 <img className="snapdeal-main-img" src={images[selectedImg]} alt={product.name} />
+                {product.stock === 0 && (
+                          <div className="out-of-stock-badge">Out of Stock</div>
+                                  )}
               </div>
             </div>
           </div>
@@ -279,21 +402,30 @@ function ProductDetail() {
             </div>
 
             <div className="snapdeal-size-row">
-              <h3 className="size-title">Select Size</h3>
-              <div className="size-options">
-                {getProductSizes(product).map((size, index) => (
-                  <button
-                    key={index}
-                    className={`size-button ${selectedSize === size.name ? 'selected' : ''} ${!size.inStock ? 'out-of-stock' : ''}`}
-                    onClick={() => setSelectedSize(size.name)}
-                    disabled={!size.inStock}
-                  >
-                    {size.name}
-                  </button>
-                ))}
-              </div>
-              {selectedSize && <p className="selected-size">Selected Size: {selectedSize}</p>}
-            </div>
+  {product.stock > 0 ? (
+    <>
+      <h3 className="size-title">Select Size</h3>
+      <div className="size-options">
+        {getProductSizes(product).map((size, index) => (
+          <button
+            key={index}
+            className={`size-button ${selectedSize === size.name ? 'selected' : ''} ${!size.inStock ? 'out-of-stock' : ''}`}
+            onClick={() => setSelectedSize(size.name)}
+            disabled={!size.inStock}
+          >
+            {size.name}
+          </button>
+        ))}
+      </div>
+      {selectedSize && <p className="selected-size">Selected Size: {selectedSize}</p>}
+    </>
+  ) : (
+    <p className="out-of-stock-text">Out of Stock</p>
+  )}
+</div>
+
+
+
 
             <div className="snapdeal-color-row">
               <span className="snapdeal-color-label">Color</span>
@@ -306,7 +438,7 @@ function ProductDetail() {
 
             <div className="snapdeal-actions">
               <button className="snapdeal-cart-btn" onClick={handleAddToCart}>ADD TO CART</button>
-              <button className="snapdeal-buy-btn">BUY NOW</button>
+              <button className="snapdeal-buy-btn" onClick={handlePayment}  disabled={loading}> BUY NOW</button>
             </div>
 
             <div className="snapdeal-delivery-row">

@@ -31,6 +31,9 @@
   font-weight: 500;
   margin: 0;
 }
+.avail{
+ margin-left: 90px;
+}
 
 .pincode-checker {
   display: flex;
@@ -208,7 +211,9 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
+  gap:60px;
   font-size: 14px;
+  
 }
 
 .proceed-btn {
@@ -233,19 +238,42 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 100px; /* 👈 gap from navbar */
+  padding-top: 80px;
   z-index: 1000;
 }
 
 .cart-box {
   background: #fff;
-  width: 800px;
-  max-height: 80vh;  /* 👈 limit height */
+  width: 80%;
+  max-width: 1060px;
+  max-height: 80vh;
   display: flex;
   flex-direction: column;
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+
+.cart-box-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+.cart-close { background: transparent; border: none; font-size: 18px; cursor: pointer; }
+.cart-title { font-size: 18px; font-weight: 600; color: #333; }
+
+.cart-columns { display: grid; grid-template-columns: 2fr 1fr 1fr 3fr 1fr; gap: 12px; padding: 12px 20px; font-size: 12px; color: #666; border-bottom: 1px solid #eee; }
+.pincode-text { color: #ef4444; font-weight: 600; }
+
+.cart-row { display: grid; grid-template-columns: 2fr 1fr 1fr 3fr 1fr; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #eee; }
+.cart-row .col { display: flex; align-items: center; }
+.item-col { gap: 12px; }
+.item-col img { width: 64px; height: 64px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; }
+.item-meta .name { font-size: 13px; color: #333; margin-bottom: 8px; }
+.remove-link { background: none; border: none; color: #666; font-size: 12px; cursor: pointer; }
+.remove-link:hover { color: #e40046; }
+.price-col { font-weight: 600; }
+.qty-col select { padding: 6px 8px; border: 1px solid #e5e7eb; border-radius: 4px; }
+.avail-col { color: #ef4444; font-size: 12px; display: flex; flex-direction: column; gap: 8px; }
+.pin-note.available { color: #26a541; }
+.pin-note.unavailable { color: #ef4444; }
+.change-pin { background: none; border: none; color: #111827; text-decoration: underline; cursor: pointer; font-size: 12px; width: fit-content; }
+.subtotal-col { font-weight: 600; }
 
 /* Cart items take scrollable space */
 .cart-items {
@@ -258,10 +286,89 @@
 .cart-footer {
   border-top: 1px solid #eee;
   padding: 15px 20px;
-  background: #fff;
+  background: #000000;
   position: sticky;  /* 👈 sticks at bottom of cart-box */
   bottom: 0;
   
   left: 0;
   right: 0;
+}
+
+.proceed-btn:disabled { background: #ccc; cursor: not-allowed; }
+.cart-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  min-height: 100vh; /* Full viewport height */
+  background-color: rgba(0, 0, 0, 0.5);
+  padding-bottom: 120px; 
+  position:relative;
+}
+
+.cart-box {
+  background-color: #fff;
+  width: 90%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 150px;
+  /* Make it scrollable if too tall */
+  overflow-y: auto; 
+  border-radius: 10px;
+  max-height: calc(100vh - 120px); 
+}
+
+.cart-items {
+  flex: 1;
+  overflow-y: auto; /* Scroll only the items */
+  padding: 10px 20px;
+}
+
+.cart-footer {
+  background-color: #000000;
+  padding: 15px 20px;
+  
+  /* Stick to bottom inside modal */
+  flex-shrink: 0;
+}
+.full-width-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #010101;
+  color:#f4eeee;
+  padding: 15px 20px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  flex-wrap: wrap; /* optional, helps on smaller screens */
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.proceedbtn {
+  padding: 10px 20px;
+  background-color: #e40046;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.proceed-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.free-delivery {
+  color: green;
+  font-weight: bold;
 }

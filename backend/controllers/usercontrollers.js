@@ -33,7 +33,7 @@ const register = async (req, res) => {
     const hashed = await bcrypt.hash(password, 10);
     const user = new User({ username, email, mobile, password: hashed, isVerified: true });
     await user.save();
-    const role = user.isAdmin || user.role === 'admin' ? 'admin' : (user.role || 'user');
+    const role = user.role || 'user'; // remove isAdmin
     const token = jwt.sign({ id: user._id, role }, process.env.JWTSECRET, { expiresIn: '12h' });
     res.status(201).json({ message: 'Registration Successful', token, user: { id: user._id, username: user.username, email: user.email, mobile: user.mobile, role } });
   } catch (err) {
@@ -77,7 +77,8 @@ const login = async (req, res) => {
     if (!user.password) return res.status(400).json({ message: 'Password not set. Use OTP login.' });
     const ok = await bcrypt.compare(password || '', user.password || '');
     if (!ok) return res.status(400).json({ message: 'Invalid credentials' });
-    const role = user.isAdmin || user.role === 'admin' ? 'admin' : (user.role || 'user');
+    const role = user.role || 'user'; // remove isAdmin
+
     const token = jwt.sign({ id: user._id, role }, process.env.JWTSECRET, { expiresIn: '12h' });
     res.json({ token, user: { id: user._id, username: user.username, email: user.email, mobile: user.mobile, role } });
   } catch (err) {
@@ -100,8 +101,8 @@ const verifyOtp = async (req, res) => {
     if (!valid) return res.status(400).json({ message: 'Invalid or expired OTP' });
     user.isVerified = true;
     await user.save();
-    const role = user.isAdmin || user.role === 'admin' ? 'admin' : (user.role || 'user');
-    const token = jwt.sign({ id: user._id, role }, process.env.JWTSECRET, { expiresIn: '12h' });
+    const role = user.role || 'user'; // remove isAdmin
+ const token = jwt.sign({ id: user._id, role }, process.env.JWTSECRET, { expiresIn: '12h' });
     res.json({ token, user: { id: user._id, username: user.username, email: user.email, mobile: user.mobile, role } });
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
 
   // Backward-compat / roles
   role: { type: String, enum: ["user", "admin", "vendor"], default: "user" },
-  isAdmin: { type: Boolean, default: false },
+  
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

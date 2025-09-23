@@ -9,11 +9,11 @@
 }
 
 .navbar-left {
-    padding: 0px 30px;
+    padding:0 30px;
 }
 
 .navbar-left img {
-    margin-right: 54px;
+    margin-right: 5px;
     margin-left:62px;
 
 }
@@ -29,6 +29,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-left: 30px;
 }
 
 .search-container {
@@ -208,7 +209,7 @@ li{
 
 .login-popup {
   background-color: #fff;
-  padding: 25px;
+  padding: 22px;
   border-radius: 4px;
   width: 350px;
   position: relative;
@@ -218,14 +219,15 @@ li{
 
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 15px;
+  top: 2px;
+  right: 8px;
+  font-size: 22px;
   cursor: pointer;
-  color: #fdfafa;
-  background-color: #e40046;
+  color: #afa2a2;
+  background-color: #ffffff;
   padding:0px 8px;
-  border-radius: 2px;
+  
+  
 }
 
 
@@ -327,4 +329,61 @@ li{
 .search-btn.searching {
     background-color: #888;
     cursor: not-allowed;
+}
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  max-height: 300px;
+
+}
+
+.suggestion-item {
+  padding: 13px 5px;
+  cursor: pointer;
+  color:#060606;
+  margin-left:30px;
+  
+}
+.suggestions::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 18px;
+  cursor: pointer;
+  margin-left: 10px;
+ 
+}
+
+.hamburger .line {
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+}
+
+.sidebar-overlayy{
+  position: absolute;
+  z-index:1000;
+  left:105px;
+  top:70px;
+}
+.hamburger:hover {
+  background-color: white;
+  border-radius: 3px; /* optional, rounded background */
+}
+
+.hamburger:hover .line {
+  background-color: black;
 }

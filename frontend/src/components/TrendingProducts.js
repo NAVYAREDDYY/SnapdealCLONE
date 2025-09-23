@@ -2,11 +2,16 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./TrendingProducts.css";
 import { Link } from "react-router-dom";
+import RatingDisplay from "./Rating";
 
 function TrendingProducts() {
   const [products, setProducts] = useState([]);
   const scrollContainerRef = useRef(null);
-
+  const getAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, r) => acc + (r.rating || 0), 0);
+    return sum / reviews.length;
+  };
   // const scrollLeft = () => {
   //   if (scrollContainerRef.current) {
   //     scrollContainerRef.current.scrollBy({ left: -220, behavior: 'smooth' });
@@ -76,28 +81,34 @@ const scrollRight = () => {
         </svg>
       </div>
       <div className="trending-list" ref={scrollContainerRef}>
-        {products.map(product => (
-          <Link to={`/product/${product._id}`} key={product._id} className="trending-card">
-            <div className="trending-img-wrap">
-              <img 
-                src={product.image} 
-                alt={product.name} 
+      {products.map(prod => (
+          <Link
+            to={`/product/${prod._id}`}
+            key={prod._id}
+            className="recently-viewed-card-link"
+          >
+            <div className="recently-viewed-card">
+              <img
+                src={prod.image}
+                alt={prod.name}
                 loading="lazy"
               />
-            </div>
-            <div className="trending-info">
-              <div className="trending-name">{product.name}</div>
-              <div className="trending-price">
-                <span className="price">₹{product.price}</span>
-                {product.mrp > product.price && (
-                  <span className="mrp">₹{product.mrp}</span>
-                )}
+              <div className="recently-viewed-name">
+                {prod.name}
               </div>
-              {product.mrp > product.price && (
-                <div className="trending-discount">
-                  {Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF
+                <div  className="recently-viewed-rating" >
+                   
+                <RatingDisplay  value={getAverageRating(prod.reviews)} showValue={false}   readOnly={true}  className="search-rating"  />
                 </div>
-              )}
+
+              <div className="recently-viewed-price">
+                
+                <span className="original">Rs {Math.round(prod.price * 1.3)}</span>
+                <span className="current">Rs {prod.price}</span>
+                <span className="recently-viewed-discount">
+                {Math.round((1 - prod.price / prod.originalPrice) * 100)}% OFF
+                </span>
+              </div>
             </div>
           </Link>
         ))}

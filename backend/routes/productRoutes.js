@@ -1,30 +1,35 @@
 const express = require("express");
 const { protect, adminOnly } = require("../middleware/authmiddleware")
-const { vendorOnly } = require("../middleware/authmiddleware")
 const Product = require('../models/product')
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const { search, category } = req.query;
-    let query = {};
+    const { search, category, subcategory } = req.query;
+let query = {};
 
-    if (search) {
-      // Create a case-insensitive search regex
-      const searchRegex = new RegExp(search, 'i');
-      query = {
-        $or: [
-          { name: searchRegex },
-          { description: searchRegex },
-          { category: searchRegex }
-        ]
-      };
-    }
+// Search by text
+if (search) {
+  const searchRegex = new RegExp(search, "i");
+  query.$or = [
+    { name: searchRegex },
+    { description: searchRegex },
+    { category: searchRegex },
+    { subcategory: searchRegex }
+  ];
+}
 
-    if (category) {
-      query.category = new RegExp(category, 'i');
-    }
+// Filter by category
+if (category) {
+  query.category = new RegExp(category, "i");
+}
+
+// Filter by subcategory
+if (subcategory) {
+  query.subcategory = new RegExp(subcategory, "i");
+}
+
 
     const products = await Product.find(query);
     res.status(200).json(products);
@@ -34,7 +39,8 @@ router.get("/", async (req, res) => {
 });
 
 // Admins can add products generally; vendors can add their own linked products
-router.post("/add", protect, async (req, res) => {
+// POST /products → add a product (admin only)
+router.post("/", protect, adminOnly, async (req, res) => {
   try {
     const { name, price, description, image, stock, category, subCategory, subcategory, color, sizes, hasSizes } = req.body;
     if (!name || !price) {
@@ -73,10 +79,7 @@ router.post("/add", protect, async (req, res) => {
     });
     await product.save();
 
-    res.status(201).json({
-      message: "Product added successfully",
-      product
-    });
+    res.status(201).json(product);
   } catch (error) {
     res.status(500).json({ message: " Error adding product", error: error.message });
   }
@@ -112,53 +115,51 @@ router.post("/:id/rate",protect,async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.put("/:id", protect, async (req, res) => {
+// PUT /products/:id → edit product (admin only)
+
+
+// PUT /products/:id → edit product (admin only)
+router.put("/:id", protect, adminOnly, async (req, res) => {
   try {
     console.log("Update request received for product:", req.params.id);
     console.log("Update data:", req.body);
+
     const productDoc = await Product.findById(req.params.id);
     if (!productDoc) {
       return res.status(404).json({ message: "Product not found" });
     }
-    const isAdmin = req.user?.isAdmin;
-    const isOwnerVendor = req.user?.role === 'vendor' && String(productDoc.vendorId || '') === String(req.user._id);
-    if (!isAdmin && !isOwnerVendor) {
-      return res.status(403).json({ message: "Not authorized" });
-    }
 
-    const product = await Product.findByIdAndUpdate(
+    // Update product
+    const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
       { new: true, runValidators: true }
     );
 
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    console.log("Product updated successfully:", product);
-    res.json({ message: "Product updated successfully", product });
+    console.log("Product updated successfully:", updatedProduct);
+    res.json({ message: "Product updated successfully", product: updatedProduct });
   } catch (err) {
     console.error("Update error:", err);
     res.status(500).json({ message: "Error updating product", error: err.message });
   }
 });
-router.delete("/:id", protect, async (req, res) => {
+
+// DELETE /products/:id → delete product (admin only)
+router.delete("/:id", protect, adminOnly, async (req, res) => {
   try {
     const productDoc = await Product.findById(req.params.id);
     if (!productDoc) return res.status(404).json({ message: "Product not found" });
-    const isAdmin = req.user?.isAdmin;
-    const isOwnerVendor = req.user?.role === 'vendor' && String(productDoc.vendorId || '') === String(req.user._id);
-    if (!isAdmin && !isOwnerVendor) {
-      return res.status(403).json({ message: "Not authorized" });
-    }
-    const result = await Product.findByIdAndDelete(req.params.id);
-    res.json({ message: "Product deleted successfully", product: result });
+
+    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+    console.log("Product deleted successfully:", deletedProduct);
+
+    res.json({ message: "Product deleted successfully", product: deletedProduct });
   } catch (err) {
     console.error("Delete error:", err);
     res.status(500).json({ message: "Error deleting product", error: err.message });
   }
 });
+
 
 
 

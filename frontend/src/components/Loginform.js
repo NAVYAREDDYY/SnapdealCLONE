@@ -39,7 +39,12 @@ function LoginForm({ setUsername }) {
         setPassword("");
         setOtp("");
         setStage('start');
-        navigate("/");
+        // If admin, go to vendor dashboard; else go home
+        if (userData.role === 'admin'|| userData.user?.role === 'admin') {
+          navigate("/vendor/dashboard");
+        } else {
+          navigate("/");
+        }
       }
     } catch (err) {
       console.error('OTP verification error:', err);
@@ -84,7 +89,11 @@ function LoginForm({ setUsername }) {
         setPassword("");
         setOtp("");
         setStage('start');
-        navigate("/");
+        if ( userData.role === 'admin' || userData.user?.role === 'admin') {
+          navigate("/vendor/dashboard");
+        } else {
+          navigate("/");
+        }
       }
     } catch (err) {
       alert(err.response?.data?.message || 'Login failed');

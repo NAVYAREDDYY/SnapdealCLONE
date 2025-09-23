@@ -108,7 +108,7 @@ const loginWithOtp = async (req, res) => {
 
     // JWT token
     const token = jwt.sign(
-      { id: user._id, email: user.email, isAdmin: user.isAdmin || false },
+      { id: user._id, email: user.email, role: user.role || 'user'},
       process.env.JWTSECRET,
       { expiresIn: "7d" }
     );
@@ -127,7 +127,7 @@ const loginWithOtp = async (req, res) => {
         _id: user._id,
         username,
         email: user.email,
-        isAdmin: user.isAdmin || false,
+        role: user.role || 'user', 
       },
     });
   } catch (err) {

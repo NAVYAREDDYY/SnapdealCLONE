@@ -1,25 +1,187 @@
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart, increaseQty, decreaseQty } from "../redux/cartSlice";
+import { removeFromCart, increaseQty, decreaseQty, clearCart } from "../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./ViewCart.css";
 
 function ViewCart() {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [pincode, setPincode] = useState("");
+  const [pinMsg, setPinMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+  const user = useSelector((state) => state.user.currentUser) || JSON.parse(localStorage.getItem("currentUser") || "null");
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
 
-  const mrpTotal = cartItems.reduce(
-    (total, item) => total + (item.price * 1.2) * item.quantity,
-    0
-  );
-
-  const totalSavings = mrpTotal - totalPrice;
+  
   const deliveryCharge = totalPrice > 500 ? 0 : 40;
+  useEffect(() => {
+    const saved = localStorage.getItem("selectedPincode");
+    if (saved) {
+      setPincode(saved);
+  
+      (async () => {
+        try {
+          const res = await axios.post("http://localhost:5000/api/pincode/check", { pincode: saved });
+          if (res.data?.available) {
+            setPinMsg("Delivery available");
+          } else {
+            setPinMsg("Not available");
+          }
+        } catch (e) {
+          setPinMsg("Unable to check pincode");
+        }
+      })();
+    }
+  }, []);
+  
+  // validate pincode
+  const validatePin = (val) => /^\d{6}$/.test(val);
+  
+  const handleCheckPin = async () => {
+    const pin = pincode.trim(); // always take fresh value
+    setPinMsg("");
+  
+    if (!validatePin(pin)) {
+      setPinMsg("Please enter a valid 6-digit pincode");
+      return;
+    }
+  
+    try {
+      const res = await axios.post("http://localhost:5000/api/pincode/check", { pincode: pin });
+      if (res.data?.available) {
+        setPinMsg("Delivery available");
+        localStorage.setItem("selectedPincode", pin);
+      } else {
+        setPinMsg("Not available");
+      }
+    } catch (e) {
+      setPinMsg("Unable to check pincode");
+    }
+  };
+  
+  
+  const initializeRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handlePayment = async () => {
+    if (!user || !user.token) {
+      alert("Please login to proceed with payment");
+      navigate("/login");
+      return;
+    }
+
+    if (!pincode || pinMsg !== "Delivery available") {
+      alert("Please check pincode availability first");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await initializeRazorpay();
+      if (!res) {
+        alert("Razorpay SDK failed to load");
+        return;
+      }
+
+      // Create order
+      const orderData = {
+        amount: (totalPrice + deliveryCharge) * 100, // Convert to paise
+        items: cartItems.map(item => ({
+          productId: item._id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        shippingAddress: {
+          fullName: user.name || "User",
+          mobile: user.mobile || "9999999999",
+          pincode: pincode,
+          city: "Default City",
+          state: "Default State",
+          country: "India"
+        }
+      };
+
+      const { data } = await axios.post(
+        "http://localhost:5000/api/payment/create-order",
+        orderData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
+          }
+        }
+      );
+
+      // Initialize Razorpay options
+      const options = {
+        key:data.key, // Replace with your Razorpay test key
+        amount: data.amount,
+        currency: "INR",
+        name: "Snapdeal Clone",
+        description: "Test Transaction",
+        order_id: data.id,
+        handler: async (response) => {
+          try {
+            const { data: verifyData } = await axios.post(
+              "http://localhost:5000/api/payment/verify-payment",
+              {
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${user.token}`
+                }
+              }
+            );
+
+            if (verifyData.success) {
+              dispatch(clearCart());
+              alert("Payment Successful!");
+              navigate("/orders");
+            }
+          } catch (error) {
+            console.error("Verification failed:", error);
+            alert("Payment verification failed");
+          }
+        },
+        prefill: {
+          name: user.name || "User",
+          email: user.email || "user@example.com",
+          contact: user.mobile || "9999999999"
+        },
+        theme: {
+          color: "#e40046"
+        }
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert(error.response?.data?.message || "Payment initialization failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (cartItems.length === 0) {
     return (
@@ -33,88 +195,88 @@ function ViewCart() {
   }
 
   return (
-    <div className="view-cart-page">
-      <div className="cart-header-section">
-        <div className="cart-header">
-          <h2 className="cart-title">Shopping Cart ({cartItems.length} Items)</h2>
-          <div className="pincode-checker">
-            <input type="text" placeholder="Enter pincode" className="pincode-input" />
-            <button className="check-btn">Check</button>
-          </div>
+    <div className="cart-modal">
+    <div className="cart-box">
+      <div className="cart-box-header">
+        <div className="cart-title">
+          Shopping Cart ({cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'})
         </div>
+        <button className="cart-close" onClick={() => navigate(-1)}>✕</button>
       </div>
 
-      <div className="view-cart-container">
-        <div className="cart-left-section">
-          <div className="cart-items">
-            {cartItems.map((item) => (
-              <div className="cart-item" key={item._id}>
-                <div className="item-image-section">
-                  <img src={item.image} alt={item.name} className="cart-item-img" />
-                </div>
-                <div className="cart-item-details">
-                  <h3 className="cart-item-name">{item.name}</h3>
-                  <div className="price-section">
-                    <span className="current-price">Rs. {item.price}</span>
-                    <span className="mrp-price">MRP Rs. {Math.round(item.price * 1.2)}</span>
-                    <span className="discount">20% Off</span>
-                  </div>
-                  <div className="delivery-info">
-                    Delivery expected by {new Date(Date.now() + 4*24*60*60*1000).toLocaleDateString()}
-                  </div>
-                  <div className="cart-item-actions">
-                    <div className="cart-quantity">
-                      <button onClick={() => dispatch(decreaseQty(item._id))}>−</button>
-                      <span>{item.quantity}</span>
-                      <button onClick={() => dispatch(increaseQty(item._id))}>+</button>
-                    </div>
-                    <button 
-                      className="remove-btn"
-                      onClick={() => dispatch(removeFromCart(item._id))}
-                    >
-                      REMOVE
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+      <div className="cart-columns">
+        <div>Item Details</div>
+        <div>Price</div>
+        <div>Quantity</div>
+        <div className="avail">
+          Showing Availability at <span className="pincode-text">{pincode || "Enter Pincode"}</span>
         </div>
+        <div>Subtotal</div>
+      </div>
 
-        <div className="cart-right-section">
-          <div className="price-details">
-            <h3 className="price-summary-title">Price Details</h3>
-            <div className="price-summary-item">
-              <span>Price ({cartItems.length} Items)</span>
-              <span>Rs. {Math.round(mrpTotal)}</span>
+      <div className="cart-items">
+        {cartItems.map((item) => (
+          <div className="cart-row" key={item._id}>
+            <div className="col item-col">
+              <img src={item.image} alt={item.name} />
+              <div className="item-meta">
+                <div className="name">{item.name}</div>
+                <button className="remove-link" onClick={() => dispatch(removeFromCart(item._id))}>REMOVE</button>
+              </div>
             </div>
-            <div className="price-summary-item">
-              <span>Discount</span>
-              <span className="discount-amount">-Rs. {Math.round(totalSavings)}</span>
+            <div className="col price-col">Rs. {item.price}</div>
+            <div className="col qty-col">
+              <select
+                value={item.quantity}
+                onChange={(e) => {
+                  const q = Number(e.target.value);
+                  const current = item.quantity;
+                  if (q > current) dispatch(increaseQty(item._id));
+                  if (q < current) dispatch(decreaseQty(item._id));
+                }}
+              >
+                {[1, 2, 3].map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
             </div>
-            <div className="price-summary-item">
-              <span>Delivery Charges</span>
-              <span className={deliveryCharge === 0 ? 'free-delivery' : ''}>
-                {deliveryCharge === 0 ? 'FREE' : `Rs. ${deliveryCharge}`}
-              </span>
+            <div className="col avail-col">
+              {pinMsg === "Delivery available" ? (
+                <div className="pin-note available">Delivery available at this pincode</div>
+              ) : pinMsg === "Not available" ? (
+                <div className="pin-note unavailable">Sorry! Current seller of the below item(s) does not deliver to your pincode or is out of stock</div>
+              ) : (
+                <div className="pin-note">Please check pincode availability</div>
+              )}
+              <button className="change-pin" onClick={handleCheckPin}></button>
             </div>
-            <div className="total-amount">
-              <span>Total Amount</span>
-              <span>Rs. {totalPrice + deliveryCharge}</span>
-            </div>
-            <div className="total-savings">
-              You will save Rs. {Math.round(totalSavings)} on this order
-            </div>
+            <div className="col subtotal-col">Rs. {item.price * item.quantity}</div>
           </div>
-          <button 
-            className="checkout-btn" 
-            onClick={() => navigate("/checkout")}
-          >
-            PROCEED TO PAY
-          </button>
-        </div>
+        ))}
       </div>
     </div>
+
+    {/* Full width footer */}
+    <div className="cart-footer full-width-footer">
+      <div className="cart-summary">
+        <div className="footer-col">
+          <div>Sub Total:</div>
+          <div>Delivery Charges:</div>
+        </div>
+        <div className="footer-col" style={{ textAlign: 'right' }}>
+          <div>Rs. {totalPrice}</div>
+          <div className={deliveryCharge === 0 ? 'free-delivery' : ''}>
+            {deliveryCharge === 0 ? 'FREE' : `Rs. ${deliveryCharge}`}
+          </div>
+        </div>
+      </div >
+      <div className="footer-col">
+      <button  className="proceedbtn" onClick={handlePayment} disabled={loading}>
+        {loading ? "PROCESSING..." : `PROCEED TO PAY RS. ${totalPrice + deliveryCharge}`}
+      </button>
+      </div>
+    </div>
+  </div>
   );
 }
 

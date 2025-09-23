@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import "./CartPage.css";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/footer";
 
 function CartPage() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -12,7 +13,10 @@ function CartPage() {
   );
 
   return (
-    <>
+    <> 
+      <div className="cart-page-container">
+    <div className="cart-content">
+
     <div className="cart-headersection">
       {cartItems.length > 0 && (
         <div className="success-notification">
@@ -46,7 +50,7 @@ function CartPage() {
           <div className="cart-count">Your Order ({cartItems.length} Items)</div>
           <div className="cart-total">
             <span className="total-label">You Pay: </span>
-            <span className="total-amount">Rs. {totalPrice}</span>
+            <span className="total-amnt">Rs. {totalPrice}</span>
           </div>
           <div className="cart-note">
             (Including delivery and other charges. View Cart for details)
@@ -64,6 +68,9 @@ function CartPage() {
       </div>
     </div>
     </div>
+    </div>
+    </div>
+    <Footer className="foot"/>
     </>
   );
 }

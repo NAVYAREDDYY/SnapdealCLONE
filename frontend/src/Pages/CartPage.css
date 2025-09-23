@@ -1,5 +1,5 @@
 .cart-headersection {
-  position: fixed;
+  /* position: fixed; */
   top: 100px; /* Added 20px gap from navbar */
   left: 90px;
   right: 60px;
@@ -9,6 +9,7 @@
   background: #fff;
   border-radius: 4px;
   overflow: hidden; /* To ensure rounded corners work with child elements */
+  margin :30px 80px;
 }
 
 .success-notification {
@@ -131,10 +132,11 @@
   color: #666;
 }
 
-.total-amount {
+.total-amnt {
   font-size: 18px;
   font-weight: 400;
   color: #333;
+
 }
 
 .cart-note {
@@ -519,6 +521,28 @@
 .shop-now-btn:hover {
   background: #d4003f;
 }
+/* Make the whole page a flex column */
+.cart-page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 30vh; /* full viewport height */
+}
+
+/* Content area takes remaining space */
+.cart-content {
+  /* flex: 1; */
+  flex: unset;
+  overflow: visible; 
+}
+
+/* Optional: footer style */
+.foot {
+ 
+  position: relative; /* remove fixed/sticky */
+  bottom: auto;
+  width: 100%; /* pushes footer to bottom */
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

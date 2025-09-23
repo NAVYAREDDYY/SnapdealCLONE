@@ -7,6 +7,8 @@ import LoginForm from "./Loginform";
 import RegisterForm from "./Register";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Sidebar from "./Sidebar";
+import { useLocation } from "react-router-dom";
 
 function Navbar() {
     const navigate = useNavigate();
@@ -15,19 +17,38 @@ function Navbar() {
     const [showRegister, setShowRegister] = useState(false);
     const [username, setUsername] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [showSidebar, setShowSidebar] = useState(false);
+    const location = useLocation();
+    const isHome = location.pathname === "/";
+
+    const trendingSearches = [
+        "T-shirts",
+        "Cookware Sets",
+        "Formal Shoes",
+        "Home & Kitchen",
+        "Soft Toys"
+    ];
+    const handleSearchClick = (keyword) => {
+        navigate(`/search?q=${encodeURIComponent(keyword)}`);
+        setSearchQuery("");       // optional, clears input
+        setShowSuggestions(false);
+    };
+
     const [isSearching] = useState(false);
     useEffect(() => {
         const storedUser = localStorage.getItem("currentUser");
         if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        if (parsedUser?.username) {
-        setUsername(parsedUser.username);
-    }  }
+            const parsedUser = JSON.parse(storedUser);
+            if (parsedUser?.username) {
+                setUsername(parsedUser.username);
+            }
+        }
     }, []);
 
     const handleLogout = () => {
-       
-        localStorage.removeItem("currentUser"); 
+
+        localStorage.removeItem("currentUser");
         setUsername(null);
         window.location.href = "/";
     };
@@ -37,8 +58,47 @@ function Navbar() {
             <Link to='/' >
                 <div className="navbar-left">
                     <img src={logo} alt="Snapdeal Logo" style={{ height: "30px" }} />
+
                 </div>
             </Link>
+            {!isHome && (
+ <div
+ className="hamburger"
+ onMouseEnter={() => {
+   clearTimeout(window.sidebarTimeout); // cancel previous close
+   setShowSidebar(true);
+ }}
+ onMouseLeave={() => {
+   window.sidebarTimeout = setTimeout(() => {
+     setShowSidebar(false);
+   }, 5000); // 5 sec delay
+ }}
+>
+ <div className="line"></div>
+ <div className="line"></div>
+ <div className="line"></div>
+
+ {showSidebar && (
+   <div
+     className="sidebar-overlayy"
+     onMouseEnter={() => {
+       clearTimeout(window.sidebarTimeout);
+       setShowSidebar(true);
+     }}
+     onMouseLeave={() => {
+       window.sidebarTimeout = setTimeout(() => {
+         setShowSidebar(false);
+       }, 3000);
+     }}
+   >
+     <Sidebar closeSidebar={() => setShowSidebar(false)} />
+   </div>
+ )}
+</div>
+
+)}
+
+           
 
             <div className="navbar-center">
                 <div className="search-container">
@@ -48,13 +108,16 @@ function Navbar() {
                         className="search-input"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => setShowSuggestions(true)}
+                        onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
                         onKeyPress={(e) => {
                             if (e.key === 'Enter' && searchQuery.trim()) {
-                                navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                                handleSearchClick(searchQuery.trim());
                             }
                         }}
                     />
-                    <button 
+
+                    <button
                         className={`search-btn ${isSearching ? 'searching' : ''}`}
                         onClick={() => {
                             if (searchQuery.trim()) {
@@ -65,6 +128,25 @@ function Navbar() {
                     >
                         {isSearching ? 'Searching...' : 'Search'}
                     </button>
+                    {showSuggestions && (
+                        <div className="suggestions">
+                            {(searchQuery
+                                ? trendingSearches.filter(item =>
+                                    item.toLowerCase().includes(searchQuery.toLowerCase())
+                                )
+                                : trendingSearches
+                            ).map((item, idx) => (
+                                <div
+                                    key={idx}
+                                    className="suggestion-item"
+                                    onMouseDown={() => handleSearchClick(item)} // use onMouseDown to avoid blur issue
+                                >
+                                    {item}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
                 </div>
                 <Link to="/cart" className="cart-btn">
                     Cart
@@ -77,12 +159,12 @@ function Navbar() {
                     <div className="dropdownAccount">
                         <ul className="accountList">
                             <li><FaUser /><span>Your Account</span></li>
-                                                        <li>
-                                                            <Link to="/orders" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
-                                                                <FaBox style={{ marginRight: 4 }} />
-                                                                <span>Your Orders</span>
-                                                            </Link>
-                                                        </li>
+                            <li>
+                                <Link to="/orders" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
+                                    <FaBox style={{ marginRight: 4 }} />
+                                    <span>Your Orders</span>
+                                </Link>
+                            </li>
                             <hr />
 
                             {!username ? (
@@ -113,7 +195,7 @@ function Navbar() {
                 <div className="overlay">
                     <div className="login-popup">
                         <span className="close-btn" onClick={() => setShowLogin(false)}>x</span>
-                        <LoginForm setUsername={setUsername}/>
+                        <LoginForm setUsername={setUsername} />
                     </div>
                 </div>
             )}
@@ -121,7 +203,7 @@ function Navbar() {
                 <div className="overlay">
                     <div className="login-popup">
                         <span className="close-btn" onClick={() => setShowRegister(false)}>x</span>
-                        <RegisterForm setUsername={setUsername}/>
+                        <RegisterForm setUsername={setUsername} />
                     </div>
                 </div>
             )}

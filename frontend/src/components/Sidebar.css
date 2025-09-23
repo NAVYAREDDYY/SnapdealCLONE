@@ -65,13 +65,16 @@
   position: absolute;
   top: 0;
   left: 100%;
-  min-width: 220px;
+  min-width: 280px; 
   background: #fff;
   border: 1px solid #ddd;
   padding: 10px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
   z-index: 100;
   margin-left: 4px;
+  display: flex;       /* side-by-side layout */
+  gap: 20px;           /* space between sublist and image */
+  align-items: flex-start;
 }
 
 /* Subcategory list */
@@ -127,3 +130,20 @@
 .sidebar-sublist li:first-child {
   font-weight: 600;
 }
+.sidebar-link {
+  text-decoration: none; /* removes underline */
+  color: inherit;        /* keeps the text color same as parent */
+  cursor: pointer;       /* optional: shows pointer on hover */
+}
+.sidebar-image {
+  display: flex;
+  flex: 1;           /* take remaining space */
+}
+
+.sidebar-image img {
+  width: 100%;       /* full width of container */
+  height:180px;     /* keep aspect ratio */
+  border-radius: 2px;
+  display: block;
+}
+

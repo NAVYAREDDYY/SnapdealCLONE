@@ -1,7 +1,7 @@
 import { FaSearch } from "react-icons/fa";
 import "./Sidebar.css";
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Sidebar() {
   const [hoverIndex, setHoverIndex] = useState(null);
@@ -17,15 +17,17 @@ function Sidebar() {
         { items: ["CLOTHING","T-Shirts", "Shirts"] },
         { items: ["FOOTWEAR","Formal Shoes", "Sports Shoes"] },
       ],
+       imageUrl: "https://g.sdlcdn.com/imgs/i/1/o/MF-05994.jpg"
     },
     {
       name: "Women's Fashion",
       image: "https://g.sdlcdn.com/imgs/k/v/x/WoMen_sitenav-5a8ca.jpg",
       sub: [
         { items: ["CLOTHING","Tops", "Sarees"] },
-        { items: ["FOOTWEAR","Heels", "Flats", "Sandals", "Boots"] },
-        { items: ["JEWELLERY","Earrings", "Necklaces", "Bangles", "Rings"] },
+        { items: ["FOOTWEAR","Heels", "Flats", "Sandals"] },
+        // { items: ["JEWELLERY","Earrings", "Necklaces", "Bangles", "Rings"] },
       ],
+      imageUrl:"https://g.sdlcdn.com/imgs/i/n/g/MS_WomenWatches_LeftNav1Aug-e15a1.jpg"
     },
     {
       name: "Home & Kitchen",
@@ -34,14 +36,16 @@ function Sidebar() {
         { items: ["KITHCHEN TOOLS","Pans", "Cookware Sets"] },
         { items: ["HOME DECOR","Wall Art", "Vases"] },
       ],
+      imageUrl:"https://g.sdlcdn.com/imgs/i/1/r/GM_28oct-e8cd1.jpg"
     },
     {
       name: "Toys, Kids' Fashion",
       image: "https://g.sdlcdn.com/imgs/k/v/x/Toys_Sitenavigation-ef666.jpg",
       sub: [
         { items: ["TOYS","Puzzles", "Soft Toys"] },
-        { items: ["KIDS","Dresses", "Pajamas"] },
+        { items: ["KIDS","Dresses&Frocks", "Pajamas"] },
       ],
+      imageUrl:"https://g.sdlcdn.com/imgs/i/1/o/toys-7fc92.jpg"
     },
     {
       name: "Beauty, Health",
@@ -50,13 +54,26 @@ function Sidebar() {
         { items: ["SKIN CARE","Moisturizers", "Face Wash"] },
         { items: ["PERSONAL CARE" ,"Shampoo", "Soap"] },
       ],
+      imageUrl:"	https://g.sdlcdn.com/imgs/i/x/e/Beauty_2912-5548d.jpg"
     },
   ];
 
-  const handleSubcategoryTap = (sub) => {
-    navigate(`/products?subcategory=${encodeURIComponent(sub)}`);
-  };
+  // const handleSubcategoryTap = (sub) => {
+  //   navigate(`/products?subcategory=${encodeURIComponent(sub)}`);
+  // };
 
+
+  const handleSubcategoryTap = (item, i, parentCategory) => {
+    if (i === 0) {
+      // First item → fetch all products in parent category
+      navigate(`/products?category=${encodeURIComponent(parentCategory)}`);
+    } else {
+      // Other items → fetch products in subcategory
+      navigate(`/products?subcategory=${encodeURIComponent(item)}`);
+    }
+  };
+  
+  
   const handleMouseEnter = (idx) => {
     clearTimeout(flyoutTimeout.current);
     setHoverIndex(idx);
@@ -92,42 +109,77 @@ function Sidebar() {
                 onMouseEnter={() => clearTimeout(flyoutTimeout.current)}
                 onMouseLeave={handleMouseLeave}
               >
-                <ul className="sidebar-sublist">
-                  {cat.sub.map((subCat, subIdx) =>
-                    subCat.items.map((item, i) => (
-                      <li
-                        key={item}
-                        onClick={() => handleSubcategoryTap(item)}
-                        onTouchStart={() => handleSubcategoryTap(item)}
-                        style={{ fontWeight: i === 0 ? "600" : "400" }} // First item bold
-                      >
-                        {item}
-                      </li>
-                    ))
-                  )}
-                </ul>
+               <ul className="sidebar-sublist">
+  {cat.sub.map((subCat) =>
+    subCat.items.map((item, i) => (
+      <li
+        key={item}
+        onClick={() => handleSubcategoryTap(item, i,cat.name)}
+        onTouchStart={() => handleSubcategoryTap(item, i,cat.name)}
+        style={{ fontWeight: i === 0 ? "600" : "400" }} // First item bold
+      >
+        {item}
+      </li>
+    ))
+  )}
+</ul>
+    {/* Category image */}
+    {cat.imageUrl && (
+      <div className="sidebar-image" >
+        <img
+          src={cat.imageUrl} // dynamic image per category
+          alt={cat.name}
+          
+        />
+      </div>
+    )}
+
               </div>
             )}
           </li>
         ))}
       </ul>
 
-      <h6 className="sidebar-title">MORE CATEGORIES</h6>
-      <ul className="sidebar-list text-only">
-        <li>Automotives</li>
-        <li>Mobile & Accessories</li>
-        <li>Electronics</li>
-        <li>Sports, Fitness & Outdoor</li>
-        <li>Computers & Gaming</li>
-        <li>Books, Media & Music</li>
-        <li>Hobbies</li>
-      </ul>
+      
+
+<h6 className="sidebar-title">MORE CATEGORIES</h6>
+<ul className="sidebar-list text-only">
+  <li>
+    <Link to={`/products?category=Automotives`} className="sidebar-link">Automotives</Link>
+  </li>
+  <li>
+    <Link to={`/products?category=Mobile & Accessories`} className="sidebar-link">Mobile & Accessories</Link>
+  </li>
+  <li>
+    <Link to={`/products?category=Electronics`} className="sidebar-link">Electronics</Link>
+  </li>
+  <li>
+    <Link to={`/products?category=Sports, Fitness & Outdoor`} className="sidebar-link">Sports, Fitness & Outdoor</Link>
+  </li>
+  <li>
+    <Link to={`/products?category=Computers & Gaming`} className="sidebar-link">Computers & Gaming</Link>
+  </li>
+  <li>
+    <Link to={`/products?category=Books, Media & Music`} className="sidebar-link">Books, Media & Music</Link>
+  </li>
+  <li>
+    <Link to={`/products?category=Hobbies`} className="sidebar-link">Hobbies</Link>
+  </li>
+</ul>
+
 
       <h6 className="sidebar-title">TRENDING SEARCHES</h6>
       <ul className="sidebar-list text-only">
-        <li><FaSearch /> Kitchen Product</li>
-        <li><FaSearch /> Shoes For Men</li>
-        <li><FaSearch /> Kurti Set</li>
+     
+  <li>
+    <Link to={`/products?category=Beauty, Health`} className="sidebar-link"><FaSearch/>Beauty, Health</Link>
+  </li>
+  <li>
+    <Link to={`/products?category=Hobbies`} className="sidebar-link"><FaSearch/>Hobbies</Link>
+  </li>
+  <li>
+    <Link to={`/products?category=Home & Kitchen`} className="sidebar-link"><FaSearch/>Home & Kitchen</Link>
+  </li>
       </ul>
     </div>
   );

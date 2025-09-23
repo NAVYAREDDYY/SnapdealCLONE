@@ -1,38 +1,43 @@
-
 export const categories = [
   {
     name: "Men's Fashion",
-    subcategories: [
-      {
-        name: "Clothing",
-        subcategories: [
-          { name: "T-Shirts" },
-          { name: "Shirts" },
-          { name: "Jeans" },
-          { name: "Trousers" },
-        ],
-      },
-      {
-        name: "Footwear",
-        subcategories: [
-          { name: "Casual Shoes" },
-          { name: "Formal Shoes" },
-          { name: "Sports Shoes" },
-        ],
-      },
+    image: "https://g.sdlcdn.com/imgs/k/v/x/Men_sitenavigation-b972a.jpg",
+    sub: [
+      { items: ["Clothing", "T-Shirts", "Shirts"] },
+      { items: ["Footwear",  "Formal Shoes", "Sports Shoes"] },
     ],
   },
   {
-    name: "Electronics",
-    subcategories: [
-      {
-        name: "Mobiles",
-        subcategories: [{ name: "Smartphones" }, { name: "Accessories" }],
-      },
-      {
-        name: "Laptops",
-        subcategories: [{ name: "Gaming Laptops" }, { name: "Business Laptops" }],
-      },
+    name: "Women's Fashion",
+    image: "https://g.sdlcdn.com/imgs/k/v/x/WoMen_sitenav-5a8ca.jpg",
+    sub: [
+      { items: ["Clothing", "Tops", "Sarees"] },
+      { items: ["Footwear", "Heels", "Flats", "Sandals", "Boots"] },
+      { items: ["Jewellery", "Earrings", "Necklaces", "Bangles", "Rings"] },
+    ],
+  },
+  {
+    name: "Home & Kitchen",
+    image: "https://g.sdlcdn.com/imgs/k/v/x/HOme_sitenavigation-d7a00.jpg",
+    sub: [
+      { items: ["Kitchen Tools", "Pans", "Cookware Sets"] },
+      { items: ["Home Decor", "Wall Art", "Vases"] },
+    ],
+  },
+  {
+    name: "Toys, Kids' Fashion",
+    image: "https://g.sdlcdn.com/imgs/k/v/x/Toys_Sitenavigation-ef666.jpg",
+    sub: [
+      { items: ["Toys", "Puzzles", "Soft Toys"] },
+      { items: ["Kids", "Dresses&Frocks", "Pajamas"] },
+    ],
+  },
+  {
+    name: "Beauty, Health",
+    image: "https://g.sdlcdn.com/imgs/k/v/x/Beauty_Site_navigation-5f3be.jpg",
+    sub: [
+      { items: ["Skin Care", "Moisturizers", "Face Wash"] },
+      { items: ["Personal Care", "Shampoo", "Soap"] },
     ],
   },
 ];

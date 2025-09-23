@@ -9,7 +9,11 @@ function RecentlyViewed() {
   const [showPrev, setShowPrev] = useState(false);
   const [showNext, setShowNext] = useState(true);
   const listRef = useRef(null);
-
+  const getAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, r) => acc + (r.rating || 0), 0);
+    return sum / reviews.length;
+  };
   const updateArrowVisibility = () => {
     if (!listRef.current) return;
     const container = listRef.current;
@@ -97,18 +101,17 @@ function RecentlyViewed() {
               <div className="recently-viewed-name">
                 {prod.name}
               </div>
-                <div  className="recently-viewed-rating" > <RatingDisplay 
-    value={prod.averageRating || 0} 
-    showValue={false} 
-    readOnly={true} 
-  /></div>
+                <div  className="recently-viewed-rating" >
+                   
+                <RatingDisplay  value={getAverageRating(prod.reviews)} showValue={false}   readOnly={true}  className="search-rating"  />
+                </div>
 
               <div className="recently-viewed-price">
                 
                 <span className="original">Rs {Math.round(prod.price * 1.3)}</span>
                 <span className="current">Rs {prod.price}</span>
                 <span className="recently-viewed-discount">
-                  {Math.round(((prod.price * 1.3 - prod.price) / (prod.price * 1.3)) * 100)}% OFF
+                {Math.round((1 - prod.price / prod.originalPrice) * 100)}% OFF
                 </span>
               </div>
             </div>
