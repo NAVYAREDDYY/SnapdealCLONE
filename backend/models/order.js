@@ -23,7 +23,9 @@ const orderSchema = new mongoose.Schema({
       type: String,
       enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
       default: 'pending'
-    }
+    },
+    selectedSize: { type: String }, 
+    color: { type: String } 
   }],
   totalAmount: {
     type: Number,

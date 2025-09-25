@@ -266,7 +266,9 @@ function ProductDetail() {
           productId: product._id,
           name: product.name,
           quantity: 1,
-          price: product.price
+          price: product.price,
+          selectedSize: product.selectedSize || "", // add size
+          color: product.color || ""
         }],
         shippingAddress: {
           fullName: currentUser.name || "User",

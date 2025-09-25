@@ -15,17 +15,17 @@ function FiltersSidebar({
   const [localMax, setLocalMax] = useState(filters.maxPrice ?? initialMaxPrice);
   const [expandedCategories, setExpandedCategories] = useState(new Set());
   const navigate = useNavigate();
-const handleCategoryClick = (categoryName) => {
-  // Navigate to category page with category filter
-  navigate(`/products?category=${encodeURIComponent(categoryName)}`);
-};
+  const handleCategoryClick = (categoryName) => {
+    // Navigate to category page with category filter
+    navigate(`/products?category=${encodeURIComponent(categoryName)}`);
+  };
 
-const handleSubCategoryClick = (categoryName, subCategoryName) => {
-  // Navigate to category + subcategory page
-  navigate(
-    `/products?category=${encodeURIComponent(categoryName)}&subcategory=${encodeURIComponent(subCategoryName)}`
-  );
-};
+  const handleSubCategoryClick = (categoryName, subCategoryName) => {
+    // Navigate to category + subcategory page
+    navigate(
+      `/products?category=${encodeURIComponent(categoryName)}&subcategory=${encodeURIComponent(subCategoryName)}`
+    );
+  };
 
   useEffect(() => {
     setLocalMin(filters.minPrice ?? initialMinPrice);
@@ -59,55 +59,55 @@ const handleSubCategoryClick = (categoryName, subCategoryName) => {
       <h3 className="filters-title">Filters</h3>
 
       {/* Categories */}
-     {/* Categories */}
-<section className="filter-block">
-  <h4>Categories</h4>
-  <div className="options-list">
-    {categories && categories.map((category) => (
-      <div key={category.name} className="category-group">
-        <div className="category-header">
-  {/* Toggle icon → expand/collapse */}
-  <span
-    className="expand-icon"
-    onClick={(e) => {
-      e.stopPropagation();
-      toggleCategory(category.name);
-    }}
-  >
-    {expandedCategories.has(category.name) ? "−" : "+"}
-  </span>
-
-  {/* Category name → show products */}
-  <span
-    className="category-name"
-    onClick={() => handleCategoryClick(category.name)}
-  >
-    {category.name}
-  </span>
-</div>
-
-
-        {/* Subcategories */}
-        {expandedCategories.has(category.name) && category.sub && (
-          <div className="sub-categories">
-            {category.sub.map((subCat) => {
-              const subName = typeof subCat === "string" ? subCat : subCat.name;
-              return (
-                <div
-                  key={subName}
-                  className="subcategory-item"
-                  onClick={() => handleSubCategoryClick(category.name, subName)}
+      {/* Categories */}
+      <section className="filter-block">
+        <h4>Categories</h4>
+        <div className="options-list">
+          {categories && categories.map((category) => (
+            <div key={category.name} className="category-group">
+              <div className="category-header">
+                {/* Toggle icon → expand/collapse */}
+                <span
+                  className="expand-icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleCategory(category.name);
+                  }}
                 >
-                  <span>{subName}</span>
+                  {expandedCategories.has(category.name) ? "−" : "+"}
+                </span>
+
+                {/* Category name → show products */}
+                <span
+                  className="category-name"
+                  onClick={() => handleCategoryClick(category.name)}
+                >
+                  {category.name}
+                </span>
+              </div>
+
+
+              {/* Subcategories */}
+              {expandedCategories.has(category.name) && category.sub && (
+                <div className="sub-categories">
+                  {category.sub.map((subCat) => {
+                    const subName = typeof subCat === "string" ? subCat : subCat.name;
+                    return (
+                      <div
+                        key={subName}
+                        className="subcategory-item"
+                        onClick={() => handleSubCategoryClick(category.name, subName)}
+                      >
+                        <span>{subName}</span>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    ))}
-  </div>
-</section>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
 
 
       {/* Price */}

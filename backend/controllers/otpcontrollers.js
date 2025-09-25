@@ -135,5 +135,36 @@ const loginWithOtp = async (req, res) => {
     res.status(500).json({ message: "Error during login", error: err.message });
   }
 };
+const sendOtpLoggedIn = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-module.exports = { sendOtp, loginWithOtp };
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    user.otp = otp;
+    user.otpExpiry = Date.now() + 5 * 60 * 1000;
+    await user.save();
+
+    if (user.email) {
+      await sendOtpEmail(user.email, otp);
+    } else if (user.mobile) {
+      const fromNumber = process.env.TWILIO_PHONE_NUMBER;
+      const toNumber = user.mobile.startsWith("+") ? user.mobile : `+91${user.mobile}`;
+      await twilioClient.messages.create({
+        body: `Your OTP is ${otp}. It is valid for 5 minutes.`,
+        from: fromNumber,
+        to: toNumber,
+      });
+    } else {
+      return res.status(400).json({ message: "No email or mobile available to send OTP" });
+    }
+
+    res.json({ message: "OTP sent successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
+module.exports = { sendOtp, loginWithOtp,sendOtpLoggedIn};

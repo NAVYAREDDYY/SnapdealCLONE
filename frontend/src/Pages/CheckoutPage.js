@@ -79,7 +79,9 @@ function CheckoutPage() {
           productId: item._id,
           name: item.name,
           quantity: item.quantity,
-          price: item.price
+          price: item.price,
+            selectedSize: item.selectedSize || "", // add size
+             color: item.color || ""
         })),
         shippingAddress: {
           fullName: address.fullName,

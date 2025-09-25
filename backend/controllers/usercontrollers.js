@@ -124,5 +124,38 @@ const setPassword = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+// PUT /reset-password-loggedin
+const resetPasswordLoggedIn = async (req, res) => {
+  try {
+    const { otp, newPassword } = req.body;
 
-module.exports = { register, login, verifyOtp, setPassword };
+    if (!otp || !newPassword) {
+      return res.status(400).json({ message: "OTP and new password are required" });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Check OTP
+    if (user.otp !== otp) return res.status(400).json({ message: "Invalid OTP" });
+    if (user.otpExpiry < Date.now()) return res.status(400).json({ message: "OTP expired" });
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+
+    // Clear OTP fields
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (err) {
+    console.error("Error in resetPasswordLoggedIn:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
+module.exports = { register, login, verifyOtp, setPassword,resetPasswordLoggedIn };

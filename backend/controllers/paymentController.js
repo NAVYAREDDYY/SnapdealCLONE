@@ -32,7 +32,9 @@ const createOrder = async (req, res) => {
       quantity: i.quantity,
       price: i.price,
       vendorId: productIdToVendor.get(String(i.productId)) || undefined,
-      itemStatus: 'pending'
+      itemStatus: 'pending',
+      selectedSize: i.selectedSize, // <<< ADD THIS
+      color: i.color 
     }));
 
     // Create order in database
