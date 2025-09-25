@@ -9,6 +9,8 @@ services:
       - ./backend/.env
     environment:
       - NODE_ENV=production
+    depends_on:
+      - mongo
     restart: unless-stopped
 
   frontend:
@@ -21,8 +23,6 @@ services:
       - ./frontend/.env
     restart: unless-stopped
 
-
-    
   mongo:
     image: mongo:6.0
     ports:
